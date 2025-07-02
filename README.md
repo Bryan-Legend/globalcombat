@@ -10,6 +10,6 @@ https://globalcombat.com
 # Project Status
 Originally launched on 2001-01-22 Global Combat.
 
-After hosting the game for over twenty five years old now, we're considering the difficult decision to take the site offline.
+After hosting the game for over twenty five years, we're considering the difficult decision to take the site offline.
 
 To honor the players who played the game every day for over twenty years, I'm open sourcing the code for the game here. I salute you.

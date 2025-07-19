@@ -8,8 +8,6 @@ This leads to the political side to GLOBAL COMBAT, in which you must sometimes f
 https://globalcombat.com
 
 # Project Status
-Global Combat was originally launched on 2001-01-22.
-
-After hosting the game for over twenty years, we're considering the difficult decision to take the site offline.
+Global Combat was originally launched on 2001-01-22. After hosting the game for so long, we're considering the difficult decision to take the site offline.
 
 To honor the players who played the game every day for over twenty years, I'm open sourcing the code for the game here.

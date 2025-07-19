@@ -1,0 +1,38 @@
+﻿@model WebGame.LogOnModel
+@{
+    ViewBag.Title = "Log On";
+}
+<h2>Log On</h2>
+<p>
+    Please enter your user name or email address and password, or @Html.ActionLink("create an account", "Register").
+</p>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td class="Label">Login Name or Email Address</td>
+            <td>
+                @Html.TextBoxFor(m => m.EmailAddress)
+                @Html.ValidationMessageFor(m => m.EmailAddress)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">@Html.LabelFor(m => m.Password)</td>
+            <td>
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Game On!" />
+            </td>
+        </tr>
+    </table>
+}
+
+<br /><a href="/Account/LostPassword">Forgot your password?</a>

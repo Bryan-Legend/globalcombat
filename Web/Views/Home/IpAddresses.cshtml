@@ -1,0 +1,38 @@
+﻿@using GlobalCombat.Core
+@model WebGame.PlayerInfoModel
+@{
+    ViewBag.Title = "Ip Addresses History";
+}
+
+<form action="" method="post">
+<table cellpadding="2" cellspacing="0" border="0">
+    <tr>
+        <td valign="top">IP Address:</td>
+        <td><input type="text" name="IPAddress" /></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="submit" value="submit" /></td>
+    </tr>
+</table>
+</form>
+
+@if (Model.IpAddresses != null)
+{
+    <h3>Login History</h3>
+    <table border="0" cellpadding="5" cellspacing="0">
+        <tr>
+            <td><b>Time</b></td>
+            <td><b>Account</b></td>
+            <td><b>Browser</b></td>
+        </tr>
+	    @foreach(var logins in Model.IpAddresses)
+	    {
+		    <tr>
+                <td>@Utility.FromUnixTimestamp((int)logins["datetime"]));</td>
+                <td><a href="Player-Info-@logins["account_id"]">@logins["account_id"]</a></td>
+                <td>@logins["browser"]</td>
+            </tr>
+	    }
+    </table>
+}

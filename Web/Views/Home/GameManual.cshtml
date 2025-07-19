@@ -1,0 +1,426 @@
+﻿@{
+    ViewBag.Title = "Game Manual";
+}
+
+<h2>Game Manual</h2>
+
+<h3 id="intro">Introduction</h3>
+<p>Global Combat is a multi player strategy game for global domination. The objective of the game is to conquer the world by eliminating all other players and owning all areas on the map.</p>
+
+<h3>Game Start</h3>
+<p>All areas are divided up randomly at the start of the game and given to each player. Areas that are under your control will be shown in your color. Each area starts with five armies. The areas are checked to make sure that no one starts with an entire region.</p>
+
+<p>Players that receive one less area get five extra armies that would have been placed in the area they didn't get, that way all players start with the same amount of armies and the players with less areas actually have a small advantage in that they get to place more armies wherever they would like.</p> 
+
+<h3>Playing your turn</h3>
+<p>All actions happen at the end of each turn. All information on other player attacks, transfers, and new army deployment are not shown to you. This invites you to try to guess everyone moves in order to gain an advantage.</p> 
+
+<p id="assignment">At the start of your first turn you should place your armies. To do this, click the number of armies on one of your areas to bring up the command dialog.</p>
+<img src="/images/manual/assignarmies.png" />
+<p>Type in the number of armies you wish to place and click the Assign button. You can assign any number of armies, from zero, to the total you have available.  You can choose to unassign you armies.</p>
+
+<p>During a turn each area can choose to attack an adjacent enemy area or transfer some of its armies to a friendly adjacent area. You cannot transfer and attack, from a single area, in the same turn. You cannot attack more than one area, from a single area, in the same turn. In other words, an area can't do more than one thing per turn.</p> 
+
+<img alt="" src="/images/manual/transfer.png" />
+
+<p>When all your moves are entered, click End Turn on the control bar. When everyone in the game has clicked done then the turn will run and the next turn begins.</p> 
+
+<h3 id="Transfer">Transfers</h3>
+<p>All army transfers happen first. The armies are simply moved from one area to the next. Note that you won't be able to attack with the armies that were just moved, but they will be in the target area to defend attacks for this turn.</p> 
+
+<h3 id="Attack">Attacks</h3>
+<p>The order of attacks is very important. They go in order, from largest attacking armies, to the lowest (unless the attack order option is set differently). If there is a tie, which is very rare, the area with the smaller area ID goes first.</p> 
+
+<p>An area that gets attacked and that has all of it's armies eliminated will be given to the attacker, if there is still an attacking army left to occupy the area. Each attacking and defending army has a chance to destroy an opposing army, they only have one chance as listed below, therefore there could be attacking armies left over, since the attack does not continue until they are wiped out. Also, there could be zero armies left in the defending country if the attack is close and the attacker does not have an army left to move in.</p> 
+
+<p>Note: There is only one round of attacks per turn. Unlike Risk, attacks do not continue until there is a decision.</p>
+
+<h3 id="Damage">Damage Calculation</h3>
+<p>Each attacking army has a 60% chance of destroying a defending army. 
+Each defending army has a 75% chance of destroying an attacking army.
+The damage is added up for both sides and delivered at the same time.</p>
+
+<h3 id="DeterministicDamage">Deterministic Damage</h3>
+<br />If non-random attacks are enabled on the game, the damage will be calculated like this:
+<table border="0" cellspacing="0" cellpadding="5"> 
+<tr>
+    <td><p>Attacking Damage</p>
+    <table border="1" cellspacing="0" cellpadding="5">
+    <tr>
+        <td><b>Army Size</b></td><td><b>Damage</b></td>
+    </tr>
+    <tr><td>1</td><td>0</td></tr>
+    <tr><td>2</td><td>1</td></tr>
+    <tr><td>3</td><td>1</td></tr>
+    <tr><td>4</td><td>2</td></tr>
+    <tr><td>5</td><td>3</td></tr>
+    <tr><td>6</td><td>3</td></tr>
+    <tr><td>7</td><td>4</td></tr>
+    <tr><td>8</td><td>4</td></tr>
+    <tr><td>9</td><td>5</td></tr>
+    <tr><td>10</td><td>6</td></tr>
+    <tr><td>11</td><td>6</td></tr>
+    <tr><td>12</td><td>7</td></tr>
+    <tr><td>13</td><td>7</td></tr>
+    <tr><td>14</td><td>8</td></tr>
+    <tr><td>15</td><td>9</td></tr>
+    <tr><td>16</td><td>9</td></tr>
+    <tr><td>17</td><td>10</td></tr>
+    <tr><td>18</td><td>10</td></tr>
+    <tr><td>19</td><td>11</td></tr>
+    <tr><td>20</td><td>12</td></tr>
+    <tr><td>21</td><td>12</td></tr>
+    <tr><td>22</td><td>13</td></tr>
+    <tr><td>23</td><td>13</td></tr>
+    <tr><td>24</td><td>14</td></tr>
+    <tr><td>25</td><td>15</td></tr>
+    <tr><td>26</td><td>15</td></tr>
+    <tr><td>27</td><td>16</td></tr>
+    <tr><td>28</td><td>16</td></tr>
+    <tr><td>29</td><td>17</td></tr>
+    <tr><td>30</td><td>18</td></tr>
+    </table>
+    </td>
+
+    <td><p>Defending Damage</p>
+    <table border="1" cellspacing="0" cellpadding="5">
+    <tr><td><b>Army Size</b></td><td><b>Damage</b></td></tr>
+    <tr><td>1</td><td>0</td></tr>
+    <tr><td>2</td><td>1</td></tr>
+    <tr><td>3</td><td>2</td></tr>
+    <tr><td>4</td><td>3</td></tr>
+    <tr><td>5</td><td>3</td></tr>
+    <tr><td>6</td><td>4</td></tr>
+    <tr><td>7</td><td>5</td></tr>
+    <tr><td>8</td><td>6</td></tr>
+    <tr><td>9</td><td>6</td></tr>
+    <tr><td>10</td><td>7</td></tr>
+    <tr><td>11</td><td>8</td></tr>
+    <tr><td>12</td><td>9</td></tr>
+    <tr><td>13</td><td>9</td></tr>
+    <tr><td>14</td><td>10</td></tr>
+    <tr><td>15</td><td>11</td></tr>
+    <tr><td>16</td><td>12</td></tr>
+    <tr><td>17</td><td>12</td></tr>
+    <tr><td>18</td><td>13</td></tr>
+    <tr><td>19</td><td>14</td></tr>
+    <tr><td>20</td><td>15</td></tr>
+    <tr><td>21</td><td>15</td></tr>
+    <tr><td>22</td><td>16</td></tr>
+    <tr><td>23</td><td>17</td></tr>
+    <tr><td>24</td><td>18</td></tr>
+    <tr><td>25</td><td>18</td></tr>
+    <tr><td>26</td><td>19</td></tr>
+    <tr><td>27</td><td>20</td></tr>
+    <tr><td>28</td><td>21</td></tr>
+    <tr><td>29</td><td>21</td></tr>
+    <tr><td>30</td><td>22</td></tr>
+    </table>
+</td></tr>
+</table>
+
+<br />
+
+<h3 id="bonus">Bonus Armies</h3>
+<p>At the end of the turn, you will receive additional armies to use. You will get 1 army for every 2 areas you control and you will get bonus armies for each region you completely own, at the end of the turn, as shown in the table below.</p> 
+<table border="1" cellspacing="0" cellpadding="5">
+<tr><td>Region</td><td>Bonus Armies</td></tr>
+<tr><td>North America</td><td>6</td></tr>
+<tr><td>South America</td><td>3</td></tr>
+<tr><td>Africa</td><td>4</td></tr>
+<tr><td>Europe</td><td>7</td></tr>
+<tr><td>Asia</td><td>9</td></tr>
+<tr><td>Australia</td><td>2</td></tr>
+</table>
+
+<p>Number of new Armies = (number of areas / 2) + (Region Bonuses)</p> 
+
+
+<h3 id="End">Game End</h3>
+<p>When a player loses all areas, or forfeits, that player is eliminated from the game. When all players have been eliminated the game is over and the results, including rating changes, are shown.</p> 
+
+<p>There will always be only one winner of a game, unless it is part of a tournament, but you will still want to place as high as you can to increase your rating.</p> 
+
+<p>Two players can be eliminated in the same turn. This rarely happens, but when it does, the player that is lower on the player list (joined the game later) will take the better place.</p> 
+
+<h3 id="Ratings">Dead Game Elimination</h3>
+<p>If a game doesn’t run a turn in 14 days or the game goes to turn 70, then the game will be forced to end.  Victory order will be determined by number of areas, then by the number of armies.  This helps keep the tournaments going and discourages excessive “turtling”.</p>
+
+<h3 id="Ratings">The Rating System</h3>
+<p>The rating system is heavily based upon the Elo system that is commonly used in Chess. It has a firm statistical foundation in determining a players skill level in relation to each other.</p> 
+
+<p>Each player is given a starting rating of 8500, although a player can be better or worse than that. After each game the rating gets moved up or down depending on the game results and the ratings of the players.</p> 
+
+<p>The formula for how much your score changes, is based upon a expected score vs. actual score. Your expected score is calculated upon the difference in ratings. Your expected score is essentially your odds of winning.</p> 
+
+<table border="1" cellspacing="0" cellpadding="5">
+<tr><td>Rating Difference</td><td>Expected Score</td></tr>
+<tr><td>1500</td><td>091</td></tr>
+<tr><td>1400</td><td>104</td></tr>
+<tr><td>1300</td><td>120</td></tr>
+<tr><td>1200</td><td>137</td></tr>
+<tr><td>1100</td><td>156</td></tr>
+<tr><td>1000</td><td>177</td></tr>
+<tr><td>900</td><td>201</td></tr>
+<tr><td>800</td><td>227</td></tr>
+<tr><td>700</td><td>255</td></tr>
+<tr><td>600</td><td>285</td></tr>
+<tr><td>500</td><td>317</td></tr>
+<tr><td>400</td><td>351</td></tr>
+<tr><td>300</td><td>424</td></tr>
+<tr><td>200</td><td>424</td></tr>
+<tr><td>100</td><td>462</td></tr>
+<tr><td>0</td><td>500</td></tr>
+<tr><td>-100</td><td>538</td></tr>
+<tr><td>-200</td><td>576</td></tr>
+<tr><td>-300</td><td>613</td></tr>
+<tr><td>-400</td><td>649</td></tr>
+<tr><td>-500</td><td>683</td></tr>
+<tr><td>-600</td><td>715</td></tr>
+<tr><td>-700</td><td>745</td></tr>
+<tr><td>-800</td><td>773</td></tr>
+<tr><td>-900</td><td>799</td></tr>
+<tr><td>-1000</td><td>823</td></tr>
+<tr><td>-1100</td><td>844</td></tr>
+<tr><td>-1200</td><td>863</td></tr>
+<tr><td>-1300</td><td>880</td></tr>
+<tr><td>-1400</td><td>896</td></tr>
+<tr><td>-1500</td><td>909</td></tr>
+</table>
+
+<p>With more than two players your Score Expected is the average of your Score Expected against all other players.</p> 
+
+<p>The change in rating is based upon score compared to score expected. Your score in the game is based upon your place, with 1.0 being first place and 0 being last place. So in a five player game first = 1.0, second = .75, third = .5, forth = .25 and last place = 0. The difference is calculated between the score and score expected and then multiplied by 150 to get the change in score. If your score is larger than your score expected then you will gain points, if your score is less than your score expected you will loose points.</p> 
+
+<p>Your rating changes by: 
+(Actual Score - (Expected Score for (Opponent Rating - Your Rating))) * 150</p> 
+
+<p>So if you had a 8500 rating played a player with a 9000 rating and you won the equation would look like this:</p> 
+
+(9000 - 8500) = 500 rating difference
+<br />Expected score for 500 = .317 
+<br />1.0 (your score) - .317 (your expected score) = .683 
+<br />.683 * 150 = 102 rating points 
+<br />
+<br />You would have a new rating of 8602 and your opponent would lose 102 points and have a new rating of 8898. 
+<br />
+<br />
+
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<h2 id="Strategy">Strategy Guide</h2>
+<p>Written by Krym, Cid The Lord, and JBash</p>
+
+<p>Firstly it should be said that sometimes it doesn't matter how well you play you can still get beaten by a lucky player who gets a good starting position or good rolls. You can also lose in multiplayer games because other players play poorly or cooperate against you. Sometimes you may play poorly and be saved by some good rolling - hopefully your luck will balance out in the end. Luck aside the following should help most new players and improve your win/loss ratio.</p> 
+
+<h3>The Basics</h3>
+
+<p><h3>Know the map</h3>
+<br />It always surprising how some players don't know what provinces are needed to get the region bonus. The ones that people seem to get confused with are Indonesia (part of Australasia) Greenland (part of USA) and UK (part of Europe). That thick black line on the map is the border between the European and Asian provinces. Some players aren't aware that you can move from Pevek to Alaska - though I am sure they will find out rather quickly in an unpleasant way. 
+
+
+<p><h3>Focus on the Regions </h3>
+<br />This is rather obvious but generally you will want to gain control of a region, Though there is an advanced strategy where this does not apply usually the winner will be the person who has the greatest army supply. Pick your region and aim to get the bonus as quick as possible. In a 2 player game you will want to stop the other player getting any regions. 
+
+
+<p><h3>Calculate your odds</h3>
+<br />Many players do not understand how the kill system works. Each attacker steps up and rolls a dice - it kills a defender 60% of the time. Simultaneously each defender rolls a dice and it kills an attacker 75% of the time. Another way of thinking about this is that you need 5 attackers to kill 3 armies but you only need 4 defenders to kill 3 attackers. The kills are not allocated until all attackers and defenders have rolled and if there are no defenders left then the attacker gets the province with whatever remains of his attacking troops. On rare occasions it is possible for all attackers and defenders to be eliminated in which case the defender retains the province with 0 troops in it. To play smart you should know exactly how many attackers or defenders you need to achieve your goals. 
+
+<p>Calculate the amount you will need and add extras if you want to play it safe and have the armies spare. This can not always be achieved and this is where the guesswork of predicting your enemies moves becomes vital. Regardless of whether you allocate insufficient or excess troops you can still be unlucky or lucky with the rolls. 
+
+<p>The general guide: 
+<br />When attacking divide the defenders by 3 and multiply by 5. 
+<br />When defending divide the attackers by 5 and multiply by 3 and add 1. 
+
+<p>An Example:
+<br />The enemy has 10 armies in the province and has another 5 unplaced. This gives him a maximum of 15 armies to use. If you wish to attack him you will need approximately 25 armies to eliminate all the defenders (15/3*5) To survive an attack by these 15 troops you would need to have more than 9 troops (15/5*3=9), that is he will probably kill close to 9 defenders so you want more than that. 
+
+<p>Remember this method assumes you roll exactly according to the probability which is not highly likely unless you are playing the non random option. However you will usually roll very close to this number. If you absolutely need to hold or take something you should allow extra troops for unlucky rolling. As a rough rule you should attack with double the number of defenders and defend with an amount close to equal to the attackers. 
+
+
+<p><h3>Know the numbers</h3>
+<br />This is a fundamental step that many players fail to do. Some players don't even bother to do the simple check of reading the forum to see how many armies other players are getting. Many players do this but assume that a player has just the number of armies to place that he got that turn - if the game forum said he got 6 armies that turn they assume he has only 6 armies to place. They don't know if he has any armies saved from previous turns. It is much better to count the number of armies a player has placed and compare this to the number given at the bottom of the map. If you add up the placed armies on the map and he has 25 and it says he has 55 then he has 30 armies to place. You must factor these 30 armies into your plans. This is not always possible to do if you are playing a 3 min game or less. 
+
+
+<p><h3>Know your own and your enemies options</h3>
+<br />Many players don't even consider what the other guy is going to do. Once you know how many armies he has to play with you must consider where he is likely to use them. The questions you should ask yourself includes the following: 
+
+<p>What has this player done in the past?
+<br />Does he tend to play the same way each game? (see advanced guide) 
+<br />What provinces do you want? 
+<br />What provinces does he want? 
+<br />What is he expecting me to do, 
+<br />What is he going to do to try and stop me? 
+<br />What are the risks for you and him for each option you and he have? 
+<br />What is the best way to counter his likely moves? 
+
+<p>One method is to do this on a region by region basis. Consider each region in turn. Is it possible for anyone to take this region? If so what is the best thing you can do to stop them. What regions can you take - what is the most likely thing they will do to stop you. Global combat will usually be won by the person who gains control of the regions so your first goal is to both gain one yourself and deny all of the rest to others. 
+
+<p>With two highly skilled players the emphasis moves more towards maintaining defensive lines as both players will usually deny the other any region. They will try and steal weak provinces while creating a solid line of defensive provinces. They will focus on taking key provinces that mean they don't have to defend other provinces and expanding this line forward. 
+
+
+<p><h3>Allocate your armies</h3>
+<br />Unless you have reached that point where you know you are going to win you aren't going to have enough armies to do all that you need to do. The difference between the good player and the average is that he is going to use his limited armies much more effectively. The original game that GC is based on was called risk - the nature of the game is about managing your risks. Under the advanced skills section there are some tactics you can use to maximize the efficiency of your armies. 
+
+<p>In summary: 
+
+<p>Good players are good because they predict the other players moves more often and can calculate the required number of armies needed to do the job. 
+
+
+<p><h3>3-8 player Games</h3>
+<br />This is rather simple. You want other players to be fighting each other while you build up armies. If 2 players are destroying each others armies while you save armies then you are going to win. 
+
+<p>If you are attacking someone you are helping all the other players - therefore to attack someone you must ensure it is benefiting you more than anyone else. A general principle is to help anyone attacking the leading player. In theory no-one should ever win a 3-8 player game because the weaker players would always gang up on the strongest. Every game that has been lost was because people forgot, ignored, or miscalculated this simple rule. 
+
+
+<p><h3>First Turn</h3>
+<br />The first turn is often where you can setup your win.Your immediate goal is to gain a region. One of the best tricks to do this is to hold back some or all of your armies. This way you can see which regions are free of enemy troop placements. If other players do this also you may still have the same problem of placing troops in the same region as another player - a sure way to get into trouble quickly. don't be afraid to abandon a region if you and another player have placed there - if one of you doesn't leave you are both going to be dead. Hopefully he will remember your good deed and be nice to you for the rest of the game. 
+
+<p>You should also consider where each of the players are likely to place - any player who has a majority of his provinces in a single region is highly likely to place there. You should think carefully before placing there as you can end up destroying each other while a third player comes in to clean you both up. A player who has his provinces spread around is more likely to withhold his troops to see where everyone else goes. If you are the only person with significant provinces in your region it is worth placing - if you wait and see what happens other players may decide that your region is undefended and dump there troops there next turn. 
+
+<p>Generally the best option will be to place wherever you have the most provinces. The initial 5 troops you get from each province you own is very helpful to take control of a region. 
+
+
+<p><h3>Placing troops</h3>
+<br />When you have no clear enemy holding troops back in multiplayer games can be very effective. If you place troops on your border with another player then you are forcing him to place troops there also. By holding back your troops you allow him to place troops on other borders. This makes other players place troops on that other border instead of against you. While troops held in reserve can be used against any player, placed troops are usually only good against one or two players. The obvious risk with this strategy is that you will have lower defences so it will not always apply. The best time to risk it is when all your neighbours seem to have a greater threat to them then you. If it looks like your neighbour is interested in attacking someone else don't dump spare troops on your mutual border - he will become worried about you and stop attacking the other player. A safe rule is to add a few troops each turn until you have enough to repel an attack even if he placed all his armies there. 
+
+<p>Your goal is to hold your troops back to enable your neighbours to attack other players freely. Once you have a strong reserve of troops many players will be unable to attack you without the risk of being destroyed in your counter attack. This tactic is especially suited to games that have a minimum army supply of 5 - in these games it is quite possible to sit in a single unwanted province and build up your armies until you have more than everyone else. 
+
+
+<p><h3>Aiding the Enemy</h3>
+<br />If first place is your goal never deny an opponent a region bonus if he is fighting a player who has no other enemies and especially if that other player is bigger than both of you. Make it clear to him that you are letting him have the region so he can use the armies against the larger player and he may help you out. Your goal is to keep them fighting at even odds - this way neither of them can grow bigger than you. 
+
+<p>Sometimes you may have to start fighting the largest player alone if everyone is holding back - they may be waiting to see if anyone else is going to help take him on. Once you get the ball rolling then they will join in - hopefully. 
+
+<p>If second place is your goal you may want to help the strongest player but be wary as many good players will punish you for this. Some players may reward you for helping them though - it will probably depend on how much he needed your help. If you want to play in an honourable way most players will expect you to oppose the strongest player while there is still a chance of beating him. However, once he is too powerful for all the other players combined then it is usually accepted that you can play for best position by executing weaker players. 
+
+
+<p><h3>Diplomacy</h3>
+<br />If the game is not listed as No alliance or No NAP (Non-Aggression Pact) then you should be communicating with other players. Be careful, though. Although NAPs and alliances make great strategic sense, many players will resent those who form one. 
+
+
+<p><h3>Regions</h3>
+<br />Usually it is the region bonuses that will win the game. In 2-4 player games which region you go for is often a matter of initial placement. This section is therefore primarily aimed at larger games of 5-8 players though the fundamental points apply equally to 2-4 player games. It is also concerned with which region should be your first priority because if you have a 2nd region in a 5-8 player game then you are probably already on your way to a win. 
+
+<p>While the Northern Regions are very tempting to try and take they are also the hardest to get and even harder to keep. The 3 southern regions will produce the majority of winners. For example - Even though it has a 9 army bonus less than 5% of games will be won because a player controlled Asia as his first region.Much more games will be won by the Player who has Australia even though it has a mere 2 army bonus. 
+
+
+<p><h3>Australia</h3>
+<br />The easiest of all regions to take and hold. It is often the reason Asia is so hard to hold as the only path out of Australia is through Asia. Once this player has reasonable defense he will almost always end up controlling most if not all of Asia. The largest benefit of Australia is that you are usually only fighting 1 enemy (or none) at a time until you have Asia at which point you will usually have enough armies to handle multiple enemies. 
+
+<p>Consolidate and then go for Asia.
+
+
+<p><h3>South America</h3>
+<br />Similar to Australia but much riskier as there are 2 potential enemies - North America and Africa. South America is a great place to be if one or both of these regions are not controlled. The best policy for SA is usually to go for your second region ASAP. One thing to keep in mind is that usually a neighbour in North America or Africa will be useful in keeping any other dominant players restricted. You don't want to weaken this player or the player he is keeping in check will become a problem. If you are a diplomatic player it is worth letting this player know that you don't intend attacking him while you focus on the other neighbour. SA is in trouble if other players control both North America and Africa - sooner or later one of them is going to go for you. Be careful with your border placements or you will force them to match you army for army. A good tactic in this situation is to not place your armies. 
+
+<p>Summary: Hold troops in reserve if 2 neighbours are in place otherwise go for 2nd Region 
+
+
+<p><h3>Africa</h3>
+<br />Africa can be a great place for starting your world conquest but it has 2 major problems. There is nearly always someone else in South America who will be placing armies in brazil and forcing you to defend Algeria. Often there will be another player in Europe who will likewise be placing troops on your border. The key to doing well in Africa is to get your neighbours to focus their troops on other borders. The best way to do this is to withhold your troops as much as possible until they are at war with another player and then make a swift strike - be wary of helping out the 3rd player they were fighting though. If you are in Africa and can get South America it is probably your best bet. The problem with taking Europe is that it exposes you much more and often North America is too busy to interfere. There is nearly always the opportunity to go for Asia but this is generally a sure way of getting South America and or Europe to attack you while you are busy with the Australasians. Most wins from Africa are when a player gets it quickly and then moves into Europe or South America before another player has them if this cant be achieved winning from Africa is much harder without good diplomacy. 
+
+<p>Summary: Hold troops in reserve and look for opportunities - the priority is South America to cover your back. 
+
+
+<p><h3>Europe</h3>
+<br />Europe is very difficult to hold, because it can be attacked from many different directions. If other players are warring in Africa (usually your biggest worry), then jump on the opportunity and grab the continent. Attacks from Greenland are pretty rare, so mainly focus on defending against Africa and Asia if anyone has the whole thing. Otherwise, if you can get the jump on Europe early, it is a great area- it gets just as many armies as North America, and is largely ignored by other players! 
+
+
+<p><h3>North America</h3>
+<br />North America is the second hardest continent to grab, right after Asia. Since it is a big continent, the fight for N. America will be long and brutal. What can really give you the edge in grabbing this area is if you own South America and just head north from there! Otherwise, just be patient. It is, as I already said, very hard to take. 
+
+<p>In summary, don't bother with this continent unless you have a fairly large foothold already, or own South America. 
+
+
+<p><h3>Asia</h3>
+<br />It is highly unlikely that anyone will be able to get Asia as their first province in an 8 player game. The chances are even quite small in a 3 player game. If you do manage to do it expect all the other players to either run or gang up on you.
+
+<p>Asia is usually the place where people who missed out on a region hang out. If you think you cant get a region you should head for Asia as not many people are going to want to waste their armies on chasing you there and leaving their key region with less defenders. You will only be in trouble when people want to eliminate you or take Asia - these are usually much less a priority for other players than defending themselves and taking out other strong players. Asia is highly recommended as a second Region but still has the problem of scaring the other players into action. 
+
+
+<br />
+<br />
+<br /><h3>Advanced Skills</h3>
+
+<p><h3>50 percent Rule</h3>
+<br />Often a situation will arise where you want to both defend and attack at the same time.Lets assume you are playing Orange in Africa(Algeria). You want to Capture that region in Europe but you are also worried about defending against a potential green attack from Africa. Lets assume both you and green you have 5 armies to place. You could put all 5 armies into Algeria and attack Europe with 9 - however this would mean that if Green attacked you with 2-8 armies he will probably get Africa as your troops will have already moved into Europe since the largest attack moves first. The same thing could happen if you attacked with 6 armies - he may attack you with 5 and get lucky - killing your 4 remaining defenders and capturing Algeria. 
+
+<p>However if you attack with 5 armies (50 percent of your troops) or less you are safe. Any larger attacks on you will go through while you have full defenders (10). Any attacks on you after your armies have moved out will still have enough defense (5) left to repel them because they will have to be lesser in size than your own attack of 5 troops. In the above case if he attacks with more than 5 you will have the full 10 troops to defend with. If he attacks with 5 or less you will still have 5 defenders there but you have also managed to attack Europe with 5 of your troops. 
+
+<p>The idea behind the 50 percent rule is that when threatened you can still defend against large attacks while doing a small attack yourself with up to half your troops. 
+
+
+<p><h3>Counter Attack</h3>
+<br />Counterattacks are very risky. If someone just invaded a continent of yours, then, obviously, you're going to counterattack. However, this will be expected, so they will bulk up on their new province. The smart thing to do, if you can afford it, is to build up on everything around it, but only just enough to stop them from doing any more damage. Save back your armies for a few turns, and then right when you have all that hidden strength, and they are getting complacent, attack in full force and take your country back! 
+
+
+<p><h3>Research</h3>
+<br />One of the best things you can do is to look at your enemies past games. Many players will make the mistake of using a similar style each game. This is especially useful when trying to predict what they will do on the first turn. You should look at the last 3 or 4 games where there was a similar number of players involved. You can do this by clicking on the players name on the map screen and selecting "View All" when the players info loads (near the bottom of the screen above the message window). 
+
+
+<p><h3>Play Styles</h3>
+<br />Some playing styles favored by players - primarily in 1 vs 1 games. You can try them out yourself or use them to predict what other players will do. 
+
+
+<p><h3>Blitzkrieg</h3>
+<br />All out attack, they will attack every possible province in the goal of getting as many regions or provinces as possible. This tends to be the strategy adopted by a lot of newbies as well as players in the late game who find themselves behind in armies and are going all out to tip the odds. 
+
+<p>The Blitzkrieg players will do a lot of small attacks. The key strategy against them is not to leave provinces with just 1 defender. Try to hold them off with an extra defender here and there while you take key provinces. 
+
+<p>They suffer a lot against defensive players but can do well against others if it is unexpected. Many Blitzkrieg players will keep banging their heads against the wall trying to take a territory that just won't fall. If you have an opponent who does this, just keep defending that one territory, allowing it to drain away your Blitzkrieg opponent's armies. Then, counterattack. 
+
+
+<p><h3>Controlled Aggression</h3>
+<br />Limited attacks with high chance of success. Typically these players only attack 1 or 2 provinces that they really want. 
+
+<p>This can be very effective unless the other player is predicting the areas where those attacks will be or is gaining more provinces than you. 
+
+
+<p><h3>The Unexpected</h3>
+<br />Some players will try to hit the least obvious region. For example they may only need 1 province to get Australia but they need 4 to get North America - they will go for North America because they hope you will be defending Australia. 
+
+<p>These players can be difficult to play but if they don't vary this strategy than you at least know what to expect. 
+
+<p>The disadvantage of the Unexpected strategy is you can sometimes lose the continents that you should have picked up in the first few turns of the game. 
+
+
+<p><h3>Defensive</h3>
+<br />Use the better odds to punish attackers. Because you do more damage while defending than attacking it can be very effective to predict where a player will attack and put enough defenders there so that he loses all his armies. 
+
+<p>You can then walk straight in - if you are lucky you can even time a small counter attack that captures the attacking province with just 2 or 3 armies on the same turn that it attacked. This is best used alongside the controlled aggression strategy. 
+
+<p>The disadvantage to this strategy is if your opponent uses the Cloak and Dagger strategy (discussed below). Then you're defending everywhere without knowing where his attack may come! 
+
+
+<p><h3>Denial</h3>
+<br />Denial is stopping the other side getting regions by getting as many defensible provinces as possible. This strategy is often used by very experienced players when they feel that they themselves can't get any region bonus. They won't try to get a bonus but will try to eliminate any enemy territory behind their lines so they can put all the troops into a few key defensive lines. 
+
+<p>Denial is useful when you're playing for high position (2nd or 3rd place), rather than trying to be the winner. 
+
+
+<p><h3>Situational</h3>
+<br />These players are the hardest to play. They vary their strategy from game to game to ensure that no one can easily predict what they will do. While they will often choose the strategy best suited to the current placements they will combine strategies and even ignore the more obvious strategy that may apply if they think you will predict it. 
+
+<p>At the same time they will be working hard to predict your moves and look for an opening. Most of the very best players will use this strategy against other good players. 
+
+
+<p><h3>Suicide Bob</h3>
+<br />These players are very difficult to defend against. They are quiet for the early part of the game, maybe taking a minor continent but mainly just staying still and stockpiling armies. Then, all of a sudden, they will pile on most of their armies all on one border territory and just fire away. 
+
+<p>If these players get a big continent, they can do a lot of damage, but often they lose steam as they go along. This tactic is often used as a last, desperate resort by players who feel they're about to be beaten. Since they seem unremarkable players early on, it's tough to predict when this will happen. 
+
+
+<p><h3>Cloak and Dagger</h3>
+<br />These are the players who will only deploy the minimum number of armies needed for defense and will hold as many as possible in reserve. They rely a great deal on psychologically intimidating their opponents. 
+
+<p>As a consequence of this hold-in-reserve strategy, you never know when Cloak and Dagger's armies will appear. Maybe when your 30 armies attack his undefended province, you'll find that there were 40 defenders and you just got trounced. Maybe the armies will appear out of nowhere and surprise attack you. 
+
+<p>A disadvantage of the Cloak and Dagger strategy is that in leaving territories undefended (since so many of your armies are held in reserve), you're gambling that your opponent will be afraid to attack you

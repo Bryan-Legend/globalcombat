@@ -1,0 +1,16 @@
+﻿<a href="/" class="Menu">Home</a><br />
+<a href="/Game-Manual" class="Menu">Game Manual</a><br />
+<span class="InactiveMenu"></span><br />
+@if (!LoggedIn)
+{
+    <a href="/Account/LogOn" class="Menu">Log On</a><br />
+    <a href="/Account/Register" class="Menu">New Account</a><br />
+}
+else
+{
+    <a href="/Create-Game" class="Menu">New Game</a><br />
+    <a href="/Messages" class="Menu">Messages</a><br />
+    <a href="/Account/Settings" class="Menu">Settings</a><br />
+    <span class="InactiveMenu"></span><br />
+    <a href="/Account/Contact" class="Menu">Contact Us</a><br />
+}

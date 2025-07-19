@@ -1,0 +1,72 @@
+﻿@using GlobalCombat.Core
+@{
+    ViewBag.Title = "Stats";
+}
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', { packages: ['corechart'] });
+</script>
+<script type="text/javascript">
+    function drawVisualization() {
+        var data = google.visualization.arrayToDataTable([
+            ['Day', 'Login Count'],
+            @Html.Raw(ViewBag.LoginCounts)
+        ]);
+
+        var ac = new google.visualization.AreaChart(document.getElementById('visualization'));
+        ac.draw(data, {
+            theme: 'maximized',
+            reverseCategories: true
+        });
+
+
+        var data2 = google.visualization.arrayToDataTable([
+            ['Day', 'New Accounts'],
+            @Html.Raw(ViewBag.NewAccounts)
+        ]);
+
+        // Create and draw the visualization.
+        var ac2 = new google.visualization.AreaChart(document.getElementById('newAccounts'));
+        ac2.draw(data2, {
+            theme: 'maximized',
+            reverseCategories: true
+        });
+    }
+
+    google.setOnLoadCallback(drawVisualization);
+</script>
+
+
+<table>
+    <tr>
+        <td class="Label">Accounts</td>
+        <td>@ViewBag.Accounts</td>
+    </tr>
+    <tr>
+        <td class="Label">Accounts in last month</td>
+        <td>@ViewBag.MonthAccounts</td>
+    </tr>
+    <tr>
+        <td class="Label">Daily Active Users</td>
+        <td>@ViewBag.DailyActive</td>
+    </tr>
+    <tr>
+        <td class="Label">Monthly Active Users</td>
+        <td>@ViewBag.MonthlyActive</td>
+    </tr>
+    <tr>
+        <td class="Label">Running Games</td>
+        <td>@ViewBag.GameCount <a href="/Home/Stats?ForceAll=1">Force Check All</a></td>
+    </tr>
+    <tr>
+        <td class="Label">Running Tourneys</td>
+        <td>@ViewBag.TourneyCount</td>
+    </tr>
+</table>
+
+<br />
+<div id="visualization" style="width: 650px; height: 150px;"></div>
+
+<br />
+<div id="newAccounts" style="width: 650px; height: 150px;"></div>

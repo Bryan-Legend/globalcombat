@@ -1,0 +1,137 @@
+﻿@using GlobalCombat.Core
+@model WebGame.PlayerInfoModel
+@{ ViewBag.Title = @Model.Account.Name; }
+
+<h2>@Model.Account.Name</h2>
+
+@if (WebGame.GameServer.GetOnlineAccount(Model.Account.Id) != null)
+{
+    <h3>Currently Online <img src="images/online.gif" width="11" height="12" alt="@Model.Account.Name is online." /></h3>
+}
+else
+{
+    <h3>Offline</h3>
+}
+
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <br />
+    <div class="ErrorMessage" >@Html.Raw(ViewBag.ErrorMessage)</div>
+}
+
+<br />
+<table>
+    <tr>
+        <td class="Label">Signed Up</td>
+        <td>@Utility.PrintTimeSpan(DateTime.UtcNow - Model.Account.SignedUp)
+        </td>
+    </tr>
+    <tr>
+        <td class="Label">Last Login</td>
+        <td>@Utility.PrintTimeSpan(DateTime.UtcNow - Model.Account.LastOn)
+        </td>
+    </tr>
+    <tr>
+        <td class="Label">Wins</td>
+        <td>@Model.Account.Wins</td>
+    </tr>
+    <tr>
+        <td class="Label">Total Games</td>
+        <td>@Model.Account.Games</td>
+    </tr>
+    <tr>
+        <td class="Label">Rating</td>
+        <td>@Model.Account.Rating</td>
+    </tr>
+    <tr>
+        <td class="Label">Rank</td>
+        <td>@Model.Account.Rank</td>
+    </tr>
+
+    @if (LoggedIn && Account.IsAdmin)
+    {
+        <tr>
+            <td class="Label">Email Address</td>
+            <td>@Model.Account.EmailAddress</td>
+        </tr>
+    }
+</table>
+
+<br />
+@if (!IsSet("AllGames"))
+{
+	<h3>Current Games</h3>
+}
+else
+{
+	<h3>All Games</h3>
+}
+@foreach (var game in Model.Games)
+{
+    if (LoggedIn)
+    {
+        @Html.Raw(game.DisplayGameStatus(Model.Account.Id, Account.IsAdmin))
+    }
+    else
+    {
+        @Html.Raw(game.DisplayGameStatus(Model.Account.Id, false))
+    }
+}
+    
+@if (!IsSet("AllGames"))
+{
+	@:[<a href="Player-Info-@Model.Account.Id?AllGames=1" >View All</a>]
+}
+
+<br />
+
+@if (LoggedIn)
+{
+    if (Model.Account.Id != Account.Id)
+    {
+        <br />
+		<form method="post" action="Send-Message">
+		    <input type="hidden" name="AccountId" value="@Model.Account.Id"/>
+		    <h3>Contact @Model.Account.Name</h3>
+            <textarea name="Message" cols="40" rows="10"></textarea><br />
+            <input type="submit" value="Send" />
+        </form>
+    }
+    else
+    {
+		<p><a href="/Account/Settings">Modify your Account info.</a></p>
+    }
+
+    if (Account.IsAdmin)
+    {
+        <br />
+        <a href="javascript:if (confirm('Are you sure you wish to disable this Player?')) { self.location='Player-Info-@Model.Account.Id?KillAccount=1'; }">Permanently Disable Player</a><br />
+    }
+}
+            
+@if (Model.IpAddresses != null)
+{
+	<h3>Login History</h3>
+    <table border="0" cellpadding="5" cellspacing="0">
+        <tr>
+            <td><b>Time</b></td>
+            <td><b>IP Address</b></td>
+            <td><b>Browser</b></td>
+        </tr>
+        @foreach (var login in Model.IpAddresses)
+        {
+			<tr>
+                <td>@Utility.FromUnixTimestamp((int)login["datetime"])</td>
+                <td><a href="IpAddresses?IPAddress=@login["ipaddress"]" >@login["ipaddress"]</a></td>
+                <td>@login["browser"]</td>
+            </tr>
+        }
+	</table>
+}
+else
+{
+    <br />
+	<a href="Player-Info-@Model.Account.Id?ShowLoginHistory=1" >Login History</a><br />
+}
+
+<br />

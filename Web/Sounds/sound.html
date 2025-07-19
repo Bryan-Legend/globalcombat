@@ -1,0 +1,11 @@
+<audio id="player"> 
+    <source src="chime.ogg" type="audio/ogg" />
+    <source src="chime.mp3" type="audio/mp3" />
+</audio>
+
+<div>
+	<button onclick="document.getElementById('player').play()">Play</button>
+	<button onclick="document.getElementById('player').pause()">Pause</button>
+	<button onclick="document.getElementById('player').volume+=0.1">Volume Up</button>
+	<button onclick="document.getElementById('player').volume-=0.1">Volume Down</button>
+</div>

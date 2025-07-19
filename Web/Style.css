@@ -1,0 +1,749 @@
+body
+{
+    font-family: Arial,Helvetica,sans-serif;
+    margin: 0px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #000000;
+    background-color: #1C2E15;
+}
+
+/* for IE */
+table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td
+{
+    font-size: 13px;
+    color: #000000;
+    vertical-align: top;
+}
+
+a
+{
+    color: #7B0000;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover
+{
+    color: #A80000;
+    text-decoration: underline;
+}
+
+small
+{
+    font-size: 10px;
+}
+
+img
+{
+    border: 0px;
+}
+
+form
+{
+    margin: 0px;
+}
+
+.Label
+{
+    white-space: nowrap;
+    text-align: right;
+    vertical-align: middle;
+    font-weight: bold;
+    padding-right: 3px;
+}
+
+.error
+{
+    color: #BC4A00;
+    font-weight: bold;
+}
+
+.ErrorMessage
+{
+    color: #BC4A00;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.title, h2
+{
+    color: #001544;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0px;
+}
+.subTitle, h3
+{
+    font-size: 13px;
+    color: #001544;
+    font-weight: bold;
+    margin: 0px;
+}
+
+select, input[type="text"], input[type="password"]
+{
+    background-color: #DFD9D2;
+    padding: 2px;
+    border: 1px solid #1C2E15;
+}
+
+select
+{
+    width: 150px;
+}
+
+#MessageBox #InviteEmail #NewEmail
+{
+    width: 400px;
+}
+
+textarea
+{
+    background-color: #DFD9D2;
+    border: 1px solid #1C2E15;
+}
+
+input[type="submit"]
+{
+    font-weight: bold;
+    color: #DFD9D2;
+    background-color: #7B0000;
+    border: 1px solid #000;
+    padding: 3px 8px;
+}
+
+input[type="submit"]:hover
+{
+    background-color: #A80000;
+}
+
+.Menu
+{
+    color: #DFD9D2;
+    font-weight: bold;
+    padding: 5px;
+    line-height: 27px;
+}
+
+.Menu:hover
+{
+    color: #DFD9D2;
+    text-decoration: underline;
+}
+
+/* Status area at the top of the left menu when on a game page. */
+.gameStatus
+{
+    margin: -5px;
+    color: #000000;
+    background-color: #DFD9D2;
+}
+
+.GameName
+{
+    top: 62px;
+    left: 140px;
+    width: 635px;
+    text-align: right;
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.Turn
+{
+    top: 97px;
+    left: 140px;
+    width: 635px;
+    text-align: right;
+    font-size: 10px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.GridCenter
+{
+    margin-left: 134px;
+    padding: 5px;
+    background-color: #9C9F90;
+}
+
+.Frame, .Top, .Side, .Bottom, .Forum
+{
+    background-color: #5D6E55;
+}
+
+.Top
+{
+    height: 43px;
+    padding: 0px;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.Side
+{
+    padding: 5px;
+    width: 150px;
+    text-align: left;
+}
+
+.Center
+{
+    padding: 10px;
+    background-color: #9C9F90;
+    margin: 0px;
+    text-align: left;
+}
+
+.Bottom
+{
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+}
+    .Bottom a
+    {
+        color: #DFD9D2;
+    }
+
+
+.PlayField
+{
+    margin: 0px;
+    background: url(/images/grid.gif);
+    width: 660px;
+    height: 480px;
+    position: relative;
+}
+
+.PlayField Span
+{
+    position: absolute;
+}
+
+#PlayerReadout
+{
+    padding: 6px;
+    background-color: #9C9F90;
+    position: absolute;
+    top: 455px;
+    left: 330px;
+}
+
+#PlayerReadout td
+{
+    min-width: 60px;
+    white-space: nowrap;
+}
+
+#EntryForm
+{
+    text-align: center;
+    padding: 6px;
+    top: 435px;
+    left: 360px;
+    visibility: hidden;
+    background-color: #9C9F90;
+    position: absolute;
+    min-width: 300px;
+}
+
+p.Message
+{
+    margin: 0px;
+}
+
+#Messages tr
+{
+    border-bottom: 1px solid #5D6E55;
+}
+
+#Messages tr:last-child
+{
+    border-bottom: 0px;
+}
+
+#Messages tr td
+{
+    padding: 4px;
+}
+
+#Messages tr td:first-child
+{
+    width: 110px;
+    vertical-align: top;
+}
+
+.Meta
+{
+    text-align: right;
+    font-size: 9px;
+    font-weight: normal;
+}
+
+.Forum
+{
+    background-color: #9C9F90;
+    padding: 5px 5px 5px 5px;
+    text-align: left;
+}
+
+
+
+/* CORE STYLES */
+
+/* noty bar */
+.noty_bar
+{
+    position: fixed;
+    display: none;
+    z-index: 9999999;
+}
+
+/* noty_message */
+.noty_bar .noty_message
+{
+    text-align: center;
+}
+
+/* noty close button */
+.noty_bar .noty_close
+{
+    cursor: pointer;
+}
+
+/* noty modal */
+.noty_modal
+{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 10000;
+    opacity: 0.6;
+    display: none;
+    left: 0;
+    top: 0;
+}
+
+/* noty container for noty_layout_topLeft & noty_layout_topRight */
+ul.noty_cont
+{
+    position: fixed;
+    z-index: 10000000;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    width: 300px;
+}
+ul.noty_cont li
+{
+    position: relative;
+    float: left;
+    clear: both;
+    list-style: none;
+    padding: 0px;
+    margin: 10px 0 0 0;
+    width: 300px; /* Fix for: http://bugs.jquery.com/ticket/2278 */
+}
+ul.noty_cont.noty_layout_topLeft
+{
+    left: 20px;
+    top: 20px;
+}
+ul.noty_cont.noty_layout_topRight
+{
+    right: 40px;
+    top: 20px;
+}
+ul.noty_cont.noty_layout_bottomLeft
+{
+    left: 20px;
+    bottom: 20px;
+}
+ul.noty_cont.noty_layout_bottomRight
+{
+    right: 40px;
+    bottom: 20px;
+}
+ul.noty_cont.noty_layout_topRight li
+{
+    float: right;
+}
+
+/* LAYOUTS */
+
+/* noty_layout_top */
+.noty_bar.noty_layout_top
+{
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+/* noty_layout_bottom */
+.noty_bar.noty_layout_bottom
+{
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+/* noty_layout_center */
+.noty_bar.noty_layout_center
+{
+    top: 40%;
+}
+
+/* noty_layout_topLeft & noty_layout_topRight */
+.noty_bar.noty_layout_topLeft, .noty_bar.noty_layout_topRight, .noty_bar.noty_layout_bottomLeft, .noty_bar.noty_layout_bottomRight
+{
+    width: 100%;
+    clear: both;
+    position: relative;
+}
+
+.noty_bar.noty_layout_topLeft .noty_message, .noty_bar.noty_layout_topRight .noty_message, .noty_bar.noty_layout_bottomLeft .noty_message, .noty_bar.noty_layout_bottomRight .noty_message
+{
+    text-align: left;
+}
+
+/* noty_layout_topCenter */
+.noty_bar.noty_layout_topCenter
+{
+    top: 20px;
+}
+
+
+/* CORE STYLES*/
+
+/* noty bar */
+.noty_bar.noty_theme_default
+{
+    color: #FFF;    
+    background-color: #5D6E55;
+}
+
+/* if you use noty with customContainer you can access noty with this way 
+	*	 .noty_custom_container noty will add automaticly this class to your customContainer
+	*	 .noty_theme_default 		your theme
+	*	 .noty_layout_inline		your layout 
+	*/
+
+/* custom container */
+.noty_custom_container.noty_theme_default.noty_layout_inline
+{
+    position: relative;
+}
+
+/* custom growl container */
+.noty_custom_container.noty_theme_default.noty_layout_inline .noty_cont.noty_layout_inline
+{
+    position: static;
+}
+/* custom noty bar */
+.noty_custom_container.noty_theme_default.noty_layout_inline .noty_bar
+{
+    border-width: 1px;
+    border-style: solid;
+    position: static;
+}
+.noty_custom_container.noty_theme_default.noty_layout_inline .noty_bar .noty_message
+{
+    font-size: 13px;
+    padding: 4px;
+}
+.noty_custom_container.noty_theme_default.noty_layout_inline .noty_bar .noty_message .noty_buttons
+{
+    margin-top: -1px;
+}
+
+/* noty_message */
+.noty_bar.noty_theme_default .noty_message
+{
+    padding: 8px 14px;
+    font-size: 16px;
+    font-weight: bold;
+    width: auto;
+}
+.noty_bar.noty_theme_default.noty_closable .noty_message
+{
+    padding: 8px 34px 8px 14px;
+}
+
+/* noty_buttons */
+.noty_bar.noty_theme_default .noty_message .noty_buttons
+{
+    float: right;
+    font-size: 13px;
+    margin-top: -4px;
+    margin-left: 4px;
+}
+
+/* noty_button */
+.noty_bar.noty_theme_default .noty_message .noty_buttons button
+{
+    margin-left: 5px;
+}
+
+/* noty close button */
+.noty_bar.noty_theme_default .noty_close
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAORJREFUeNq0lU0OgjAQhRm5gUl3rLyBB3BDQjwI4TDcgmu4NqwNJGxdueqWA4zzCJoxtvxoeckLzbz2C5ShEDNHDiXis/gkPooPY/0uvomv4ov48bUSQGUSF+Ka51WPc0kzNGwvLnm9ynHtB5B+hGkoaWDB/6t4AZOFe7ZkTxMAc1dqreU0TbnrunetbVvOsmzIPMoBrFwJYGgCY8wAgjFGDZlHFYCNK9EAXPUYmUcNgL0v1dAFMKjfRSsVx/H0hC0eOfhLmWwbfTcYozbXNsEbO/int8nhEPz4CnbAUuhfwFOAAQAA48KKOuexjwAAAABJRU5ErkJggg==');
+    width: 20px;
+    height: 20px;
+}
+
+/* noty modal */
+.noty_modal.noty_theme_default
+{
+    opacity: 0.7;
+}
+
+/* LAYOUTS */
+
+/* noty_layout_top */
+.noty_bar.noty_theme_default.noty_layout_top
+{
+    border-bottom: 3px solid #eee;
+}
+
+/* noty_layout_bottom */
+.noty_bar.noty_theme_default.noty_layout_bottom
+{
+    border-top: 3px solid #eee;
+}
+
+.noty_bar.noty_theme_default.noty_layout_center .noty_close
+{
+    top: 8px;
+}
+
+.noty_bar.noty_theme_default.noty_layout_center .noty_message .noty_buttons
+{
+    margin-top: -2px;
+}
+
+/* noty_layout_topLeft & noty_layout_topRight */
+.noty_bar.noty_theme_default.noty_layout_center, .noty_bar.noty_theme_default.noty_layout_topLeft, .noty_bar.noty_theme_default.noty_layout_topRight, .noty_bar.noty_theme_default.noty_layout_bottomLeft, .noty_bar.noty_theme_default.noty_layout_bottomRight
+{
+    border: 1px solid #eee;
+}
+.noty_bar.noty_theme_default.noty_layout_center .noty_message, .noty_bar.noty_theme_default.noty_layout_topLeft .noty_message, .noty_bar.noty_theme_default.noty_layout_topRight .noty_message, .noty_bar.noty_theme_default.noty_layout_bottomLeft .noty_message, .noty_bar.noty_theme_default.noty_layout_bottomRight .noty_message
+{
+    font-size: 13px;
+    font-weight: normal;
+}
+.noty_bar.noty_theme_default.noty_layout_topLeft .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_layout_topRight .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_layout_bottomLeft .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_layout_bottomRight .noty_message .noty_buttons
+{
+    float: none;
+    border-top: 1px solid #ccc;
+    margin-left: 0;
+    margin-top: 10px;
+    padding-top: 10px;
+    text-align: right;
+}
+
+/* noty_layout_topCenter */
+.noty_bar.noty_theme_default.noty_layout_topCenter
+{
+}
+.noty_bar.noty_theme_default.noty_layout_topCenter .noty_message
+{
+    font-weight: normal;
+    font-size: 13px;
+}
+.noty_bar.noty_theme_default.noty_layout_topCenter .noty_close
+{
+    top: 50%;
+    margin-top: -10px;
+}
+.noty_bar.noty_theme_default.noty_layout_topCenter.noty_success
+{
+    border: 1px solid #50C24E;
+}
+.noty_bar.noty_theme_default.noty_layout_topCenter .noty_message .noty_buttons
+{
+    margin-left: 15px;
+    margin-top: 0px;
+}
+
+/* NOTIFICATION TYPES */
+
+/* noty_notification */
+.noty_bar.noty_theme_default.noty_notification
+{
+    background-color: #fff;
+    border-color: #ccc;
+    color: #555;
+}
+.noty_bar.noty_theme_default.noty_notification.noty_layout_topLeft .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_notification.noty_layout_topRight .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_notification.noty_layout_bottomLeft .noty_message .noty_buttons, .noty_bar.noty_theme_default.noty_notification.noty_layout_bottomRight .noty_message .noty_buttons
+{
+    border-color: #ccc;
+}
+
+
+
+
+
+
+
+
+
+
+/* CHAT */
+.chatbox{	
+	text-align: left;	
+	position: fixed;	
+	bottom: 0px;
+	right: 10px;
+	width: 210px;
+	height: 300px;
+	
+}
+/* chat box default border*/
+.cb_default {
+	border: 1px solid #ccc;
+	background-color: #fff;	
+}
+/* chat box highlight border*/
+.cb_highlight {
+	border: 1px solid #000;
+	background-color: #F9FAFF;	
+}
+
+/* CHAT PARTNER NAME */
+.chatbox .header{
+	height: 25px;
+	line-height: 25px;
+	color: #fff;
+	font-weight: bold;
+	width: 205px;
+	float: left;
+	font-size: 12px;
+	padding-left: 5px;
+}
+
+.header_bg_default {
+	background-color: #5D6E55;
+}
+
+.header_bg_blink {
+	background-color: #9C9F90;
+}
+
+
+.chatbox .header p{
+	float: left;
+	padding-left: 8px;
+}
+.chatbox .header a{
+	float: right;	
+	text-decoration: none;
+	color: #fff;
+	display: block;
+	margin-right: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+.chatbox .header a:hover {
+	color: #000;
+}
+
+/* CHAT AREA WHERE TEXT APPEARS */
+.chatbox .chat_area{
+	float: left;
+	clear: left;
+	width: 200px;
+	height: 200px;	
+	margin-top: 5px;	
+	margin-bottom: 5px;
+	overflow: auto;	
+	margin-left: 5px;
+}
+
+.chatbox .chat_info{
+	width: 100%;
+	float: left;
+	clear: left;
+	height: 20px;
+	line-height: 20px;
+}
+
+.chatbox .chat_info p{
+	padding-left: 8px;	
+	float: left;
+	color: #aaa;	
+	font-style: italic;
+}
+
+.chatbox .chat_area p{
+	padding-left: 8px;	
+	padding-right: 8px;	
+	font-size: 12px;
+	line-height: 22px;
+	float: left;
+	clear: left;
+	word-wrap: break-word;
+	max-width: 176px;
+}
+
+/* CHAT MESSAGE BOX */
+.chatbox .chat_message{	
+	width: 100%;
+	height: 55px;	
+	float: left;
+	clear: left;	
+}
+
+.chatbox .chat_message textarea {
+	border: 1px solid #ddd;
+	width: 194px;
+	height: 53px;
+	float: left;	
+	margin-left: 5px;
+	padding-top: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.chatbox .chat_message textarea:hover {
+	border: 1px solid #3994f9;
+}
+
+.chatbox a.maximize_chatbox {
+	display: none;
+}
+
+
+.chatbox .chat_area .error{
+	color: #c30000;
+	font-style: italic;
+}
+
+.chatbox .chat_area .me{
+	color: #3994f9;
+	font-style: italic;	
+}
+
+.chatbox .chat_area .system{
+	color: #aaa;
+	font-style: italic;	
+	font-size: 11px;
+}

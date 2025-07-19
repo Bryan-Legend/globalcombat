@@ -1,0 +1,29 @@
+﻿@using GlobalCombat.Core
+@model List<WebGame.Message>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Your Messages</h2>
+<br />
+<table id="Messages" width="100%">
+@foreach (var message in Model)
+{
+    @Html.Raw(message.Print(true, false, Account.Id))
+}   
+</table>
+
+@if (Model.Count == 0)
+{
+    @:You have no messages.
+    <br />
+    <br />
+}
+else
+{
+@*    <br />
+    <a href='Messages?DeleteAll=1'>Delete All Messages</a>
+    <br />
+    <br />
+*@
+}

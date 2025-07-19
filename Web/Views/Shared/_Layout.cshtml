@@ -1,0 +1,118 @@
+﻿@using WebGame
+@using GlobalCombat.Core
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title - GLOBAL COMBAT</title>
+    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" href="/Style.css" />
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-74613-6']);
+        _gaq.push(['_setDomainName', 'globalcombat.com']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    @if (LoggedIn)
+    {
+        if (Request.Browser.Browser == "IE" && Request.Browser.MajorVersion <= 7)
+        {
+            <script src="/Scripts/json2.min.js" type="text/javascript"></script> 
+        }
+        <script src="/Scripts/jquery.signalR-0.5.1.min.js" type="text/javascript"></script> 
+        <script src="/signalr/hubs" type="text/javascript"></script>
+        <script src="/Global.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        jQuery(document).ready(function(){
+            @foreach (var chatTarget in OpenChatWindows)
+            {
+                var chatTargetParts = chatTarget.Split('|');
+                @:$.popupChat(@chatTargetParts[0], '@chatTargetParts[1]', @(GameServer.GetOnlineAccount(Int32.Parse(chatTargetParts[0])) == null ? "true" : "false"));
+            }
+        });
+        </script>
+    }
+    @RenderSection("Header", required: false)
+</head>
+<body>
+<center>
+    <table cellpadding="0" cellspacing="0" width="1000">
+        <tr><td colspan="3">
+            <div class="Top">
+                <a href="/" ><img src="/images/logo.png" width="216" height="28" style="padding:7px" alt="Global Combat" /></a>
+                <img src="/images/photos/topPic@((Utility.Random.Next(12) + 1).ToString("D2")).jpg" align="right" alt="World War 1" />
+            </div>
+        </td></tr>
+        <tr>
+            <td style="width:160px;">
+                <div class="Side">
+                    @if (IsSectionDefined("Sidebar"))
+                    {
+                        @RenderSection("Sidebar", required: false);
+                    }
+                    else
+                    {
+                        @Html.Partial("_DefaultMenu");
+                    }
+                </div>
+                <script type="text/javascript">
+                    google_ad_client = "ca-pub-8751921752358817";
+                    /* Global Combat Left */
+                    google_ad_slot = "2226909453";
+                    google_ad_width = 160;
+                    google_ad_height = 600;
+                </script>
+                <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>            
+            </td>
+            <td>
+                <div class="Center">
+                    @RenderBody()
+
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </div>
+                @RenderSection("UnderCenter", required: false)
+@*                <center>
+                    <script type="text/javascript">
+                        google_ad_client = "ca-pub-8751921752358817";
+                        /* Global Combat Bottom */
+                        google_ad_slot = "8907056301";
+                        google_ad_width = 336;
+                        google_ad_height = 280;
+                    </script>
+                    <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+                </center>
+*@
+                <div class="Bottom" >
+                    <center><a href="https://cooltext.com">Cool Text</a> &nbsp;&nbsp;- &nbsp;&nbsp;Created by <a href="https://legendstudio.com">Legend Studio</a></center>
+                </div>
+            </td>
+            <td width="160">
+                <script type="text/javascript">
+                    google_ad_client = "ca-pub-8751921752358817";
+                    /* Global Combat Right */
+                    google_ad_slot = "6129255619";
+                    google_ad_width = 160;
+                    google_ad_height = 600;
+                </script>
+                <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+            </td>
+        </tr>
+    </table>
+</center>
+@if (LoggedIn)
+{
+<audio id="notify"> 
+    <source src="/Sounds/chime.ogg" type="audio/ogg" />
+    <source src="/Sounds/chime.mp3" type="audio/mp3" />
+</audio>
+}
+</body>
+</html>

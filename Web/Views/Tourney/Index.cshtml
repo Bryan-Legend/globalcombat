@@ -1,0 +1,125 @@
+﻿@using WebGame
+@model WebGame.Tourney
+@{
+    ViewBag.Title = Model.Name;
+    var isPlaying = LoggedIn && Model.IsPlaying(Account.Id);
+}
+
+<h2>Tournament - @Model.Name</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <span class="ErrorMessage">@Html.Raw(ViewBag.ErrorMessage)</span><br />
+}
+
+<br />
+<table cellpadding="2" cellspacing="0" >
+    <tr>
+        <td class="Label">Description</td>
+        <td>@Model.Description</td>
+    </tr>
+    <tr>
+        <td class="Label">Players</td>
+        <td>@Model.MaxPlayers</td>
+    </tr>
+    <tr>
+        <td class="Label">Initial Game Size</td>
+        <td>@Model.GameSize</td>
+    </tr>
+    <tr>
+        <td class="Label">Winners</td>
+        <td>@Model.Winners from each game</td>
+    </tr>
+    @if (Model.OptionGame != null)
+    {
+        <tr><td class="Label">Turn Rate</td><td>@Model.OptionGame.TurnLengthDisplay</td></tr>
+        <tr><td class="Label">Map</td><td>@Model.OptionGame.MapName</td></tr>
+        <tr><td class="Label">Fog of War</td><td>@Model.OptionGame.IsFogged</td></tr>
+        <tr><td class="Label">Minimum Army Bonus</td><td>@Model.OptionGame.MinimumArmies</td></tr>
+        <tr><td class="Label">Reverse Attack Order</td><td>@Model.OptionGame.ReverseAttackOrder</td></tr>
+        <tr><td class="Label">Non-Random Attacks</td><td>@Model.OptionGame.IsNonRandom</td></tr>
+    }
+</table>
+<br />
+	
+@if (LoggedIn && !Model.IsStarted && !isPlaying)
+{
+    <a href="Join">Join This Tournament</a>
+    <br />
+    <br />
+}
+		
+@if (Model.IsDoubleElimination)
+{
+    <h2>Main Bracket</h2>
+}
+
+<table border="0" cellpadding="10"><tr>
+@foreach (var round in Model.WinnerBracket)
+{
+    @Html.Partial("_Round", round);
+}
+</tr></table>
+
+@if (Model.IsDoubleElimination)
+{
+    //int WinnerRound = 1;
+    //RoundNum++;
+    <h2>Loser Bracket</h2>
+    <table border="0" cellpadding="10"><tr>
+    @foreach (var round in Model.LoserBracket)
+    {
+        @Html.Partial("_Round", round);
+    }
+	</tr></table>
+		
+    //RoundNum++;
+    <br />
+    <h2>Final Game</h2>
+    <table border="0" cellpadding="10"><tr>
+        @Html.Partial("_Round", Model.FinalRound)
+	</tr></table>
+}
+
+@if (!Model.IsStarted)
+{
+    <br />
+    <h2>Players Signed Up: @Model.CurrentPlayers</h2>
+    foreach (var account in Model.Players)
+    {
+        @AccountLink(account.Id, account.Name)
+        
+        if (LoggedIn && Account.IsAdmin)
+        {
+			@:- <a href='javascript:if(confirm("You sure?")) { self.location="/Tournament-@Model.Id/?Drop=@account.Id" }'>DROP</a>
+	    }
+        <br />
+    }
+    <br />
+}
+
+@if (LoggedIn && !Model.IsStarted)
+{
+    if (!isPlaying)
+    {
+        <a href="Join">Join This Tournament</a>
+        <br />
+        <br />
+    }
+    else
+    {
+        <a href="Quit">Quit This Tournament</a>
+        <br />
+        <br />
+    }
+
+    if (Account.IsAdmin)
+    {
+        <a href='javascript:if(confirm("You sure?")) { self.location="/Tournament-@Model.Id/?StartTourney=1" }'>START TOURNEY</a>
+    }
+}
+
+@if (LoggedIn && Account.IsAdmin)
+{
+    <br /><a href='javascript:if(confirm("You sure?")) { self.location="/Tournament-@Model.Id/?KillTourney=1" }'>KILL TOURNEY</a>
+}

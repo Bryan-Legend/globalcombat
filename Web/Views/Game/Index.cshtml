@@ -1,0 +1,327 @@
+﻿@using WebGame
+@model GlobalCombat.Core.Game
+@{
+    ViewBag.Title = Model.GameName;
+    GlobalCombat.Core.Player Player = ViewBag.Player;
+    var IsPlaying = Player != null;
+}
+
+<script type="text/javascript">
+    function Send()
+    {
+        var messageBox = $("#MessageBox");
+        message = messageBox.val();
+        $.post("Send", { message: message });
+        messageBox.val("");
+    }
+
+    $(function () {
+        var gameHub = $.connection.gameHub;
+
+        gameHub.addMessage = function (message) {
+            $('#Messages').prepend(message);
+        };
+
+        gameHub.setDone = function (playerNumber) {
+            $('#Player' + playerNumber).append('- Done&nbsp;');
+        };
+    });
+</script>
+
+@if (!Model.Started || Model.Ended)
+{
+    <h2>@Model.GameName</h2>
+    <br />
+    <table cellspacing="0" cellpadding="2">
+        <tr><td class="Label">Turn Rate</td><td>@Model.TurnLengthDisplay</td></tr>
+        <tr><td class="Label">Number of Players</td><td>@Model.MaxPlayers</td></tr>
+        <tr><td class="Label">Map</td><td>@Model.MapName</td></tr>
+        <tr><td class="Label">Fog of War</td><td>@Model.IsFogged</td></tr>
+        <tr><td class="Label">Minimum Army Bonus</td><td>@Model.MinimumArmies</td></tr>
+        <tr><td class="Label">Reverse Attack Order</td><td>@Model.ReverseAttackOrder</td></tr>
+        <tr><td class="Label">Non-Random Attacks</td><td>@Model.IsNonRandom</td></tr>
+        <tr><td class="Label">Private Invite Only</td><td>@Model.IsPrivate</td></tr>
+        @if (Model.TourneyId != 0)
+        {
+            <tr><td class="Label">Tournament</td><td><a href="/Tournament-@Model.TourneyId">#@Model.TourneyId</a></td></tr>
+        }
+    </table>
+    <br />
+
+    <h3>Players</h3>
+    @Html.Partial("_PlayerList");
+    <br />
+
+    if (!Model.Ended && Model.TourneyId == 0 && Model.Invites.Count > 0)
+    {
+        <h3>Invites</h3>
+        foreach (var invite in Model.Invites)
+        {
+            @AccountLink(invite.AccountId, invite.Name)<br />
+        }
+        <br />
+    }
+
+    if (LoggedIn && !Model.Ended)
+    {
+        <div class="CommandMenu">
+        @if (!IsPlaying)
+        {
+            <a href="Join">Join</a>
+        }
+        else
+        {
+            if (Model.TourneyId == 0)
+            {
+                <form action="Invite" method="post">
+                    <table><tr>
+                        <td><textarea name="InviteEmail" placeholder="Email Addresses or Account Names" cols="40" rows="2" ></textarea></td>
+                        <td>
+                            <input type="submit" value="Invite Players" style="vertical-align: top;" />
+                            <br /> <small style="vertical-align: top">Players do not need an account to be invited via email.</small>
+                        </td>
+                    </tr></table>
+                </form>
+                <br />
+                <a href="Quit">Quit Game</a>
+
+                if (Player.Number == 1)
+                {
+                    @:- <a href="Start">Start Game</a>
+                }
+
+                //// Game Reset
+                //if (IsSet("ResetGame") && Admin && (int)Game["status"] == 1)
+                //{
+                //    Execute("update game set status=0, turn=0, cur_players=max_players where id=" + GameID);
+                //    Execute("update player set status=0, done=0, new_armies=0 where game_id=" + GameID);
+                //    Execute("delete from area where game_id=" + GameID);
+                //    Response.Redirect("Default?Refresh=" + PHP.DateTimeSupport.Time().ToString());
+                //    return;
+                //}
+
+                //if (!IsTourney || Admin)
+                //{
+                //    // check killgame
+                //    if (IsSet("KillGame") && Admin)
+                //    {
+                //        KillGame(GameID);
+                //        Response.Redirect("Default?Refresh=" + PHP.DateTimeSupport.Time().ToString());
+                //        return;
+                //    }
+            }
+        }
+        </div>
+    }
+
+    if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <br />
+        <div class="ErrorMessage" >@Html.Raw(ViewBag.ErrorMessage)</div>
+    }
+}
+else
+{    
+    <script src="/Main.js" type="text/javascript"></script>
+    <script src="/maps/@Model.MapInfo.TechName/map.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var AD = new Array(@(Model.MapInfo.NumAreas + 1));
+        var GameID = @Model.Id;
+        var CurrentPlayer = @(IsPlaying ? Player.Number : -1);
+        var NewArmies = @(IsPlaying ? Player.UnassignedArmies : -1);
+    </script>
+   
+    @:<div class="PlayField">
+    @:<div style="position:relative;left:-132px;top: -60px;">
+    <span class="GameName">@Model.GameName</span>
+    <span class="Turn">Turn @Model.Turn</span>
+
+    // render background image
+    <span style='top: 61px; left: 132px;'><img src="/maps/@Model.MapInfo.TechName/lines.gif" /></span>
+
+    // render areas
+    var armySpans = new System.Text.StringBuilder();
+    var areaScript = new System.Text.StringBuilder();
+    foreach (var areaData in Model.Areas)
+    {
+        var currentAreaInfo = areaData.AreaInfo;
+
+        bool isOwner = IsPlaying ? areaData.Owner.Number == Player.Number : false;
+        bool showArea = true;
+
+        // determine if this area is visible
+        if (Model.IsFogged && !isOwner)
+        {
+            showArea = false;
+            if (IsPlaying)
+            {
+                foreach (var inboundAreaInfo in currentAreaInfo.Inbounds)
+                {
+                    showArea = showArea || Model.GetArea(inboundAreaInfo.Number).Owner.Number == Player.Number;
+                }
+            }
+        }
+
+        // render area image
+        <span style='left:@(currentAreaInfo.X)px;top:@(currentAreaInfo.Y)px;'><img src="/maps/@Model.MapInfo.TechName/@(currentAreaInfo.TechName)@(showArea ? (areaData.Owner.Number % 9) : 0).gif" width="@currentAreaInfo.Width" height="@currentAreaInfo.Height" /></span>
+        
+        // render armies
+        if (showArea)
+        {
+            armySpans.AppendFormat
+            (
+                "<span id=Area{0} style='white-space:nowrap;' title='{1}'> </span>",
+                areaData.AreaInfo.Number,
+                currentAreaInfo.Name
+            );
+        }
+
+        //// prepare the army data
+        int armyCount = areaData.Armies;
+        if (isOwner)
+        {
+            armyCount += areaData.AssignedArmies;
+        }
+        if (!showArea)
+        {
+            armyCount = -1;
+        }
+
+        areaScript.AppendFormat
+        (
+            "AD[{0}]=new A({1},{2},{3},{4},{5});",
+            areaData.AreaInfo.Number,
+            areaData.Owner.Number,
+            armyCount,
+            isOwner ? areaData.AssignedArmies : 0,  // hide enemy commands from geting posted to user javascript
+            isOwner ? (areaData.Target != null ? areaData.Target.AreaInfo.Number : 0) : 0,
+            isOwner ? areaData.Amount : 0
+        );
+    }
+
+    // render page
+    if (Model.MapInfo.TechName != "elements")
+    {
+        <span style='top: 157px; left: 281px;'><img src="/maps/@Model.MapInfo.TechName/continentdivider.gif" /></span>
+    }
+
+    @Html.Raw(armySpans.ToString());
+
+    <script type="text/javascript">
+    @Html.Raw(areaScript.ToString());
+    ShowAllAreaArmies();
+    </script>
+
+    <div id="PlayerReadout">
+    <table cellpadding="0" cellspacing="0">
+    <tr>
+    @{ var count = 0; }
+    @foreach (var player in Model.Players)
+    {
+        if (count != 0 && count % 2 == 0)
+        {
+            @:</tr><tr>
+        }
+        count++;
+        <td class="Label">@AccountLink(player.AccountId, player.Name, player.GetColor())&nbsp;</td>
+        <td id="Player@(player.Number)">
+            @if (!player.IsEliminated)
+            {
+                @player.Armies @:(@player.Areas) @Html.Raw(player.Done ? " - Done&nbsp;" : "")
+            }
+            else
+            {
+                @player.GetPlace() @:&nbsp;
+            }
+        </td>
+    }
+    </tr>
+    </table>
+    </div>
+    
+    <div id="EntryForm">
+    <form method="post">
+            <input id="GameID" type="hidden" name="GameID" value="@Model.Id" />
+            <input id="ActiveArea" type="hidden" name="AreaID" value="0" />
+            <input id="AssignFlag" type="hidden" name="Assign" value="0" />
+            <input id="TransferFlag" type="hidden" name="Transfer" value="0" />
+            <input id="AttackFlag" type="hidden" name="Attack" value="0" />
+            <span id="ActionMessage" style='position: relative;'></span>
+            <span id="AmountField" style='position: relative; display: none;'>
+            <br /><b>Armies</b> <input type="text" id="AmountInput" name="Amount" size="3" />
+            <br /><input type="submit" id="ActionSubmit" name="ActionSubmit" value="        " onclick="return SubmitAction();"/> or </span>[ <a href='javascript:CancelAction();'>Cancel</a> ]
+        </form>
+    </div>
+
+    @:</div>
+    @:</div>
+
+    <script type="text/javascript">
+        TimeTillKill(@Model.TimeLeft.TotalSeconds, @Model.Id);
+    </script>
+    
+    if (Model.CurrentPlayers > 20)
+    {
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    }
+}
+
+@section UnderCenter {
+    <div class="Forum">
+        @if (LoggedIn)
+        {
+            <form onsubmit="Send(); return false;" >
+                <input type="text" id="MessageBox" class="MessageInput" placeholder="Send a message." size="60" />
+            </form>
+        }
+        <table id="Messages" width="100%">
+            @foreach (Message message in ViewBag.Messages)
+            {
+                @Html.Raw(message.Print())
+            }
+        </table>
+    </div>
+}
+
+@section Sidebar {
+    @if (LoggedIn && IsPlaying && Model.Started && !Model.Ended)
+    {
+        <div class="gameStatus">
+            <table width="100%">
+                <tr><td colspan="2" align="center"><a class="Player" href="/Player-Info-@Player.AccountId"><font color="@Player.GetColor()">@Player.Name</font></a></td></tr>
+                <tr><td class="Label">Armies</td><td>@Player.Armies</td></tr>
+                <tr><td class="Label">New Armies</td><td><span id="NewArmyCount">@Player.UnassignedArmies</span></td></tr>
+                <tr><td class="Label">Areas</td><td>@Player.Areas</td></tr>
+                <tr><td class="Label">Time</td><td width="58"><span id="gameTimer">&nbsp;</span></td></tr>
+            </table>
+        </div>
+        <span class="InactiveMenu"></span><br />        
+
+        if (!Player.IsEliminated)
+        {
+            if (!Player.Done)
+            {
+                <span id="EndTurnLink"><a href="javascript:Done();" class="Menu">End Turn</a><br /></span>
+            }
+
+            <a href="javascript:if (confirm('Are you sure you wish to quit this game?')) { self.location='Quit'; }" class="Menu">Quit Game</a><br />
+            <span class="InactiveMenu"></span><br />
+        }
+
+        if (Model.TourneyId != 0)
+        {
+            <a href="/Tournament-@Model.TourneyId/" class="Menu">Tournament Info</a><br />
+            <span class="InactiveMenu"></span><br />
+        }
+        <a href="/" class="Menu">Home</a><br />
+    }
+    else
+    {
+        if (Model.TourneyId != 0)
+        {
+            <a href="/Tournament-@Model.TourneyId/" class="Menu">Tournament Info</a><br />
+            <span class="InactiveMenu"></span><br />
+        }
+        @Html.Partial("_DefaultMenu");
+    }
+}

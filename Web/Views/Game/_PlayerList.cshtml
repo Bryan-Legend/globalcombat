@@ -1,0 +1,35 @@
+﻿@model GlobalCombat.Core.Game
+
+<table cellpadding="2" cellspacing="2" border="0">
+    @if (Model.Players.Count > 0)
+    {
+        foreach (var player in (from p in Model.Players orderby p.Place select p))
+        {
+            <tr>
+                <td align="right">@AccountLink(player.AccountId, player.Name, player.GetColor())</td>
+                <td>&nbsp;</td>
+                <td>
+                    @if (player.Place > 0)
+                    {
+                        @player.GetPlace();
+                    }
+                </td>
+                @if (player.Place > 0)
+                {
+                    <td> (Score Expected = @player.ScoreExpected, Score = @player.Score, Rating Change = @player.RatingChange)</td>
+                }
+                else
+                {
+                    if (ViewBag.IsHost)
+                    {
+                        <td><a href="Kick?PlayerNumber=@player.Number" >Kick</a></td>
+                    }
+                }
+            </tr>
+        }
+    }
+    else
+    {
+        <tr><td>No players in game.</td></tr>
+    }
+</table>

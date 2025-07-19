@@ -1,0 +1,104 @@
+﻿@using GlobalCombat.Core
+@model Game
+
+@{
+    ViewBag.Title = "Create a New Game";
+}
+
+<h2>Create a New Game</h2>
+
+@using (Html.BeginForm())
+{
+    <br />
+    <table>
+        <tr>
+            <td class="Label">Training Mode</td>
+            <td>
+                @Html.CheckBoxFor(m => m.IsTraining)
+                @Html.ValidationMessageFor(m => m.IsTraining)
+            </td>
+        </tr>
+
+        <tr>
+            <td align="right">or</td>
+        </tr>
+
+        <tr>
+            <td class="Label">Max Number of Players</td>
+            <td>
+                @Html.DropDownListFor(m => m.MaxPlayers, new SelectList(new[] { 2, 3, 4, 5, 6, 7, 8 }))
+                @Html.ValidationMessageFor(m => m.MaxPlayers)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> &nbsp; </td>
+        </tr>
+        <tr>
+            <td class="Label">Map Name</td>
+            <td>
+                @Html.DropDownListFor(m => m.MapName, new SelectList(Enum.GetValues(typeof(MapName))))
+                @Html.ValidationMessageFor(m => m.MapName)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Turn Timeout Length</td>
+            <td>
+                @Html.DropDownListFor(m => m.TurnLength, new[] { new SelectListItem() { Text = "1 Minute", Value = "1" }, new SelectListItem() { Text = "2 Minute", Value = "2" }, new SelectListItem() { Text = "5 Minute", Value = "5" }, new SelectListItem() { Text = "1 Hour", Value = "60" }, new SelectListItem() { Text = "1 Day", Value = "1440", Selected = true }, new SelectListItem() { Text = "3 Day", Value = "4320" } })
+                <font size="-2">When the force turn becomes available. Please force turn sparingly.</font>
+                @Html.ValidationMessageFor(m => m.TurnLength)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">
+                Fog of War
+            </td>
+            <td>
+                @Html.CheckBoxFor(m => m.IsFogged) 
+                <font size="-2" >When set players see only adjacent areas.</font>
+                @Html.ValidationMessageFor(m => m.IsFogged)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Minimum Army Bonus</td>
+            <td>
+                @Html.DropDownListFor(m => m.MinimumArmies, new SelectList(new[] { 0, 1, 2, 3, 4, 5 }, 3))
+                <font size="-2" >Minimum number of new armies given each turn.</font>
+                @Html.ValidationMessageFor(m => m.MinimumArmies)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">
+                Reverse Attack Order
+            </td>
+            <td>
+                @Html.CheckBoxFor(m => m.ReverseAttackOrder)
+                <font size="-2">When set smallest attacks happen first.</font>
+                @Html.ValidationMessageFor(m => m.ReverseAttackOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">
+                Non-Random Attacks
+            </td>
+            <td>
+                @Html.CheckBoxFor(m => m.IsNonRandom)
+                <font size="-2">When set use <a href="Game-Manual#Damage">deterministic damage</a>.</font>
+                @Html.ValidationMessageFor(m => m.IsNonRandom)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Private Invite Only</td>
+            <td>
+                @Html.CheckBoxFor(m => m.IsPrivate)
+                @Html.ValidationMessageFor(m => m.IsPrivate)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <br />
+                <input type="submit" value="Create Game" />
+            </td>
+        </tr>
+    </table>
+}

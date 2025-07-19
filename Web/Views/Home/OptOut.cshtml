@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Opt Out";
+}
+
+<h2>Email Opt Out</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <br />
+    <span class="error">@ViewBag.ErrorMessage</span>
+}
+else
+{
+    <form method="post">
+    <input type="hidden" name="Account" value="@GetInt("Account")" />
+    <input type="hidden" name="Key" value="@GetInt("Key")" />
+    <input type="hidden" name="Confirmed" value="1" />
+    <center>
+    <br />Do you no longer wish to receive emails about new features? 
+    <br />
+    <br /><input type="submit" value="Confirm" />
+    </center>
+    </form>
+}

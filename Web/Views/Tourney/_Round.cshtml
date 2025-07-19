@@ -1,0 +1,54 @@
+﻿@model WebGame.TourneyRound
+
+<td style="vertical-align: middle; white-space:nowrap;" ><b>Round @Model.Number</b><br>
+@if ((Model.WinnersOfRoundNumber == 0) && (Model.LosersOfRoundNumber == 0))
+{
+    @:(Initial Players)<br />
+}
+else if (Model.LosersOfRoundNumber == 0)
+{
+    @:(Round @Model.WinnersOfRoundNumber Winners)<br />
+}
+else if (Model.WinnersOfRoundNumber == 0)
+{
+    @:(Round @Model.LosersOfRoundNumber Losers)<br />
+}
+else if (Model.LosersOfRoundNumber > 0)
+{
+    @:(Round @Model.WinnersOfRoundNumber Winners<br />&amp; Round @Model.LosersOfRoundNumber Losers)<br />
+}
+else
+{
+    @:(Round @Model.WinnersOfRoundNumber Winners<br />&amp; Round @(-Model.LosersOfRoundNumber) Winners)<br />
+}
+
+@for (var gameNumber = Model.StartGame; gameNumber < Model.StartGame + Model.GameCount; gameNumber++)
+{
+    <br />
+    if (!Model.Tourney.IsStarted)
+    {
+        @:Game @gameNumber<br />
+        for (var playerNumber = 1; playerNumber <= Model.GameSize; playerNumber++)
+        {
+            @:Player @playerNumber<br />
+        }
+    }
+    else
+    {
+        var game = Model.Tourney.GetGame(gameNumber);
+        if (game != null)
+        {
+            @:<a href="/Game-@game.Id/">Game @gameNumber</a><br />
+            foreach (var player in (from p in game.Players orderby p.Place select p))
+            {
+            @:&nbsp; 
+            if (player.Place > 0)
+            {
+                <b>@player.Place</b>@:. 
+            }
+            @AccountLink(player.AccountId, player.Name)<br />
+            }
+        }
+    }
+}
+</td>

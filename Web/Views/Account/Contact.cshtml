@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Contact Us";
+}
+
+<h2>Contact Us</h2>
+
+@if (ViewBag.ResultString != null)
+{
+    <span class="ErrorMessage">@Html.Raw(ViewBag.ResultString)</span><br />
+}
+
+<br />
+Tell us what you really think!<br />
+<br />
+
+@using (Html.BeginForm())
+{
+    <form action="" name="contact" method="post">
+    <table cellspacing="2" cellpadding="0" border="0">
+    <tr>
+        <td class="Label">Subject</td>
+        <td><input name="Subject" type="text" id="Subject" size="40" value="@GetString("Subject")"/></td>
+    </tr>
+    <tr>
+        <td class="Label" style="vertical-align: top;">Message</td> 
+        <td><textarea name="Comments" rows="10" cols="50" id="Comments">@GetString("Comments")</textarea></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Send Message" /></td>
+    </tr>
+    </table>
+    </form>
+}

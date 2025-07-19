@@ -1,0 +1,72 @@
+﻿@model WebGame.RegisterModel
+
+@{
+    ViewBag.Title = "Create Account";
+}
+
+<h2>Create a New Account</h2>
+<p>
+    Please choose a user name and enter an email address and password. <a href="/Account/LogOn">Already have an account?</a>
+</p>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
+
+    <table>
+        <tr>
+            <td class="Label">@Html.LabelFor(m => m.UserName)</td>
+            <td>
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">@Html.LabelFor(m => m.Email)
+            <small><br />We won't spam you!</small></td>
+            <td>
+                @Html.TextBoxFor(m => m.Email)
+                <small>Important for game progress updates and player messages.</small>
+                @Html.ValidationMessageFor(m => m.Email)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">@Html.LabelFor(m => m.Password)</td>
+            <td>
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">@Html.LabelFor(m => m.ConfirmPassword)</td>
+            <td>
+                @Html.PasswordFor(m => m.ConfirmPassword)
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Create Account" />
+            </td>
+        </tr>
+    </table>
+}
+
+<br />
+<br />
+<br />
+<br />
+<h3>Code of Conduct</h3>
+<blockquote>
+Don't play with multiple accounts, that's just lame.
+<br />
+<br />Be respectful and don't abuse fellow players.
+<br />
+<br />If you break these rules your account will be disabled and your IP address will be banned.
+</blockquote>
+<br />
+<br />

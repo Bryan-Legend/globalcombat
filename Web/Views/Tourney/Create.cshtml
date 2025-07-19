@@ -1,0 +1,107 @@
+﻿@using WebGame
+@model Tourney
+@{
+    ViewBag.Title = "Create a New Tournament";
+}
+
+<h2>Create a New Tourney</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <span class="ErrorMessage">@Html.Raw(ViewBag.ErrorMessage)</span><br />
+}
+
+@using (Html.BeginForm())
+{
+    <br />
+    <table>  
+        <tr>
+            <td class="Label">Tournament Name</td>
+            <td>
+                @(Html.TextBoxFor(m => m.Name))
+                @Html.ValidationMessageFor(m => m.Name)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="Label">Game Size</td>
+            <td>
+                @Html.DropDownListFor(m => m.GameSize, new SelectList(new[] { 2, 3, 4, 5, 6, 7, 8, 42 }))
+                @Html.ValidationMessageFor(m => m.GameSize)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="Label">Initial Games</td>
+            <td>
+                @Html.DropDownListFor(m => m.InitialGames, new SelectList(new[] { 2, 4, 8, 16, 32, 64, 128, 256 }))
+                @Html.ValidationMessageFor(m => m.InitialGames)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="Label">Number of Winners</td>
+            <td>
+                @Html.TextBoxFor(m => m.Winners)
+                @Html.ValidationMessageFor(m => m.Winners)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Double Elimination</td>
+            <td>
+                @Html.CheckBoxFor(m => m.IsDoubleElimination)
+                @Html.ValidationMessageFor(m => m.IsDoubleElimination)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Option Game Id</td>
+            <td>
+                @Html.TextBoxFor(m => m.OptionGameId)
+                @Html.ValidationMessageFor(m => m.OptionGameId)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Auto Start</td>
+            <td>
+                @Html.CheckBoxFor(m => m.AutoStart)
+                @Html.ValidationMessageFor(m => m.AutoStart)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Recurring</td>
+            <td>
+                @Html.CheckBoxFor(m => m.Recurring)
+                @Html.ValidationMessageFor(m => m.Recurring)
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">Description</td>
+            <td>
+                @Html.TextBoxFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <br />
+                <input type="submit" value="Create Tournament" />
+            </td>
+        </tr>
+    </table>
+}
+@*
+    /*
+   I've created a crude interface for creating and deleting tournaments.
+	
+   I've decided to give you the ability to create tournaments.  There is now a link to a create tourney page on your accounts info page.  You will also be able to delete tourneys before they start.
+	
+   Please let me know if you have any questions or problems creating tourneys.
+	
+   I've also limited the ability to start tourneys to just you and me, although any admin can still kick players.
+	
+   Right now all tourneys will start with standard game options enabled.  I'm working on an interal rewrite of the game settings.  I will probably make custom tourney game settings available after I make those changes.
+	
+   Feel free to create as many tourneys as you'd like.  I'm giving you the tourney creation rights because I trust you and I think you'll like having them.  Please don't feel like you need to manage the tourneys on GC if you don't want to.  I'll probably be giving the rights to some other people as well.
+	
+   Have fun.*/
+*@

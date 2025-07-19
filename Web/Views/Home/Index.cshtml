@@ -1,0 +1,212 @@
+﻿@using GlobalCombat.Core
+@model WebGame.HomeIndexModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@if (LoggedIn)
+{
+    //if (ResultString != String.Empty)
+    //    Response.Write("<span class=ErrorMessage>" + ResultString + "</span>");
+			
+    <a href="Player-Info-@Account.Id"><h2>@Account.Name</h2></a>
+    
+    <br />
+    <table>
+        <tr>
+            <td class="Label">Signed Up</td>
+            <td>@Utility.PrintTimeSpan(DateTime.UtcNow - Account.SignedUp)</td>
+        </tr>
+        <tr>
+            <td class="Label">Wins</td>
+            <td>@Account.Wins</td>
+        </tr>
+        <tr>
+            <td class="Label">Total Games</td>
+            <td>@Account.Games</td>
+        </tr>
+        <tr>
+            <td class="Label">Rating</td>
+            <td>@Account.Rating</td>
+        </tr>
+        <tr>
+            <td class="Label">Rank</td>
+            <td>@Account.Rank</td>
+        </tr>
+    </table>
+   
+@*    if (Model.MessageCount > 0)
+    {
+        <br />
+        <a href="Messages"><h2>Your Messages</h2></a>
+        @:You have @Model.MessageCount message@(Model.MessageCount > 1 ? "s" : "").<br />
+        <a href="Messages">Go there...</a><br />
+    }
+*@
+    <br />
+    <h3>Your Current Games</h3>
+    if (Model.PlayerGames.Count > 0)
+    {
+        foreach (var game in Model.PlayerGames)
+        {
+            @Html.Raw(game.DisplayGameStatus(Account.Id, Account.IsAdmin))
+        }
+    }
+    else
+    {
+        @:None... Afraid?<br />
+    }
+
+    @:[<a href="Player-Info-@Account.Id?AllGames=1">View All Your Games</a>]<br />
+    <br />
+
+    if (Model.InvitedGames.Count > 0)
+    {
+        <h3>Games Invites</h3>
+        foreach (var game in Model.InvitedGames)
+        {
+            @Html.Raw(game.DisplayGameStatus(Account.Id, Account.IsAdmin))
+        }
+        <br />
+    }
+
+    @Html.Raw(Model.YourTourneyList)
+    
+    <h2>Ready to Get Played?</h2>
+    <table width="100%"><tr><td width="50%">
+        <h3>Games to Join</h3>
+        @if (Model.NewGames.Count > 0)
+        {
+            foreach (var game in Model.NewGames)
+            {
+                @Html.Raw(game.DisplayGameStatus(-1, false))
+            }
+        }
+        else
+        {
+            @:No awaiting games... shouldn't you start one?<br />
+        }
+	    [<a href="Create-Game">Create a New Game</a>]<br />
+	    @if (Account.IsAdmin)
+        {
+            @:[<a href="javascript:if (confirm('Are you sure you wish to clear games?')) { self.location='Default?ClearGames=1'; }" >Clear Games</a>]
+        }
+    </td><td width="50%" nowrap >
+		<h3>Tournaments to Join</h3>
+        @Model.TourneyList
+        @if (Account.IsAdmin)
+        {
+            @:[<a href="Create-Tournament" >Create a Tournament</a>]
+        }
+    </td></tr></table>
+
+    <br />
+    <h3> Players Currently Online: @WebGame.GameServer.OnlineAccounts.Count</h3>
+        lock (WebGame.GameServer.OnlineAccounts)
+        {
+            foreach (var account in WebGame.GameServer.OnlineAccounts)
+            {
+            @AccountLink(account.Id, account.Name)<br />
+            }
+        }
+}
+else
+{
+	<table cellpadding="0" >
+        <tr><td>
+	        <h2>GLOBAL COMBAT</h2>
+	        ....is a Risk like web based game in which turns are taken simultaneously.  Since it is played over the internet, actions are hidden from your enemies until the turn runs.<br />
+	        <p><b>GLOBAL COMBAT</b> has a WW1 era motif and contains a Elo based rating system which rewards players depending on their place in the game, not just whether they win or lose.</p>
+	        <p>This leads to the political side to <b>GLOBAL COMBAT</b>, in which you must sometimes forge alliances in order to survive, fighting not just to win, but for your honor...</p>
+            This site works best with Google Chrome due to it's support for desktop notifications.
+            <br />
+            <br />
+	        <h2>Ready to Get Played?</h2>
+	        <table width="100%"><tr><td>
+                <h3>Games to Join</h3>
+                @if (Model.NewGames.Count > 0)
+                {
+                    foreach (var game in Model.NewGames)
+                    {
+                        @Html.Raw(game.DisplayGameStatus(-1, false))
+                    }
+                }
+                else
+                {
+                    @:No awaiting games... shouldn't you start one?<br />
+                }
+	        </td><td nowrap="nowrap" >
+			    <h3>Tournaments to Join</h3>
+                @Model.TourneyList
+            </td></tr></table>
+	    </td><td style="padding-left:15px;">
+	        <form method="post" action="/Account/LogOn">
+                @if (IsSet("Redirect"))
+                {
+                    @:<input type="hidden" name="Redirect" value="@GetString("Redirect")" />
+                }
+
+			    <h2>Log On</h2>
+                <table cellpadding="2" cellspacing="0" border="0" >
+		
+			        <tr>
+                        <td class="Label">Name<br /> or Email</td>
+                        <td><input type="text" name="EmailAddress" size="20" /></td>
+                    </tr>
+                    <tr>
+                        <td class="Label">Password</td>
+                        <td><input type="password" name="Password" size="20" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input id="LoginButton" type="submit" value="Insert Coin" /></td>
+                    </tr>
+                </table>
+
+                <br />
+                <a href="/Account/Register">Create an Account</a>
+
+                <br />
+                <br />
+                <h3>Players Currently Online: @WebGame.GameServer.OnlineAccounts.Count</h3>
+                @lock (WebGame.GameServer.OnlineAccounts)
+                {
+                    foreach (var account in WebGame.GameServer.OnlineAccounts)
+                    {
+                        @AccountLink(account.Id, account.Name)<br />
+                    }
+                }
+	        </form>
+	    </td></tr>
+    </table>
+
+<center>
+    <br />
+    <br />
+    <br />
+    <form action="/Account/Register">
+    <input type="submit" value="   Play Global Combat   " style="padding: 10px; font-size: 20px;box-shadow: 2px 2px 5px #333;" />
+    </form>
+    <br />
+    <br />
+    <br /><a href="/images/screenshot_full.png">Gameplay Screenshot<br /><img alt="" height="266" width="350" src="/images/screenshot_thumb.png" /></a>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+</center>
+}
+
+@if (LoggedIn && Account.IsAdmin)
+{
+    <br />
+    <br />
+    <a href="Home/Stats" >Site Stats</a>
+}
+
+
+@*<br />
+<br />
+<span class="ErrorMessage">
+</span>*@

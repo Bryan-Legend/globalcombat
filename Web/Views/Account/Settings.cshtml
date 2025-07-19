@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Account Settings";
+}
+<h2>Account Settings @Account.Name</h2>
+<br />
+
+@if (ViewBag.ResultString != null)
+{
+    <span class="ErrorMessage">@Html.Raw(ViewBag.ResultString)</span>
+    <br />
+}
+
+<table cellpadding="2" cellspacing="0" border="0">
+
+@if(Account.Name.EndsWith('-' + Account.Id.ToString()))
+{
+    <form method="post">
+    <tr>
+        <td class="Label">New Login Name</td>
+        <td><input type="text" name="NewLoginName" value="@Account.Name" size="40" /></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Set Login Name" /></td>
+    </tr>
+    </form>
+
+    <tr>
+        <td><br /></td>
+    </tr>
+}
+    
+<form method="post">
+<tr>
+    <td class="Label">Email Address</td>
+    <td><input type="text" name="NewEmail" value="@Account.EmailAddress" size="40" /></td>
+</tr>
+<tr>
+    <td></td>
+    <td><input type="submit" value="Set Email Address" /></td>
+</tr>
+</form>
+
+<tr>
+    <td><br /></td>
+</tr>
+
+<form method="post">
+<tr>
+    <td class="Label">Current Password</td>
+    <td><input type="password" name="OldPassword" size="20" /></td>
+</tr>
+<tr>
+    <td class="Label">New Password</td>
+    <td><input type="password" name="NewPassword" size="20" /></td>
+</tr>
+<tr>
+    <td class="Label">Re-type Password</td>
+    <td><input type="password" name="NewPasswordVerify" size="20" /></td>
+</tr>
+<tr>
+    <td></td>
+    <td><input type="submit" value="Set Password" /></td>
+</tr>
+</form>
+	
+<tr>
+    <td>&nbsp;</td>
+</tr>
+
+<form method="post">
+<tr>
+    <td class="Label">Set Email Notifications</td>
+    <td><select name="ForwardEmails" >
+        <option value="All" @(Account.ForwardEmails == "All" ? "selected" : "")>All</option>
+        <option value="GameStarts"@(Account.ForwardEmails == "GameStarts" ? "selected" : "")>Game Starts</option>
+        <option value="AllGame"@(Account.ForwardEmails == "AllGame" ? "selected" : "")>Game Starts and Turns</option>
+        <option value="None"@(Account.ForwardEmails == "None" ? "selected" : "")>None</option></select></td>
+</tr>
+<tr>
+    <td></td>
+    <td><input type="submit" value="Set Email Notifications" /></td>
+</tr>
+</form>
+</table>
+
+<br />
+<a href="/Account/LogOff">Log Off</a>

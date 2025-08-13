@@ -11,3 +11,5 @@ https://globalcombat.com
 Global Combat was originally launched on 2001-01-22. After hosting the game for so long, we're considering the difficult decision to take the site offline.
 
 To honor the players who played the game every day for over twenty years, I'm open sourcing the code for the game here.
+
+See https://github.com/Bryan-Legend/globalcombat/issues/11 if you'd be interested in hosting GC.

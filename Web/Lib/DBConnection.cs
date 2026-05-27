@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Linq;
-using System.Configuration;
 
 using MySql.Data.MySqlClient;
 using System.Globalization;
@@ -26,12 +25,12 @@ namespace LT
         public static string GetConnectionString(string siteName = null)
         {
             if (siteName == null)
-                siteName = ConfigurationManager.AppSettings["SiteName"];
+                siteName = AppConfig.Get("SiteName");
 
-            var result = ConfigurationManager.AppSettings[$"DatabaseConnection {siteName}"];
+            var result = AppConfig.Get($"DatabaseConnection {siteName}");
 
             if (result == null)
-                throw new ConfigurationErrorsException($"Database connection string for sitename {siteName} not found in app settings.");
+                throw new InvalidOperationException($"Database connection string for sitename {siteName} not found in app settings.");
 
             return result;
         }

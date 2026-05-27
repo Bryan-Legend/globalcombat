@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Net.Mail;
@@ -12,9 +11,9 @@ namespace LT
 {
     public static class BasePage
     {
-        public static string SiteName => ConfigurationManager.AppSettings["SiteName"];
+        public static string SiteName => AppConfig.Get("SiteName");
 
-        public static string ServerAddress => ConfigurationManager.AppSettings["ServerAddress"];
+        public static string ServerAddress => AppConfig.Get("ServerAddress");
 
         static readonly Random random = new Random();
         public static Random RandomGenerator => random;
@@ -87,11 +86,11 @@ namespace LT
             {
                 try
                 {
-                    var mailClient = new SmtpClient(ConfigurationManager.AppSettings["MailServer"]);
+                    var mailClient = new SmtpClient(AppConfig.Get("MailServer"));
                     mailClient.Send
                     (
-                        $"{SiteName} Web Server <{ConfigurationManager.AppSettings["ErrorEmail"]}>",
-                        ConfigurationManager.AppSettings["ErrorEmail"],
+                        $"{SiteName} Web Server <{AppConfig.Get("ErrorEmail")}>",
+                        AppConfig.Get("ErrorEmail"),
                         SiteName + " Error " + Guid.NewGuid().ToString(),
                         errorMessage
                     );

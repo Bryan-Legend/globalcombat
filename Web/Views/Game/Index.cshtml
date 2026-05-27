@@ -16,15 +16,20 @@
     }
 
     $(function () {
-        var gameHub = $.connection.gameHub;
-
-        gameHub.addMessage = function (message) {
+        if (!window.gameConnection) return;
+        window.gameConnection.on("addMessage", function (message) {
             $('#Messages').prepend(message);
-        };
-
-        gameHub.setDone = function (playerNumber) {
+        });
+        window.gameConnection.on("setDone", function (playerNumber) {
             $('#Player' + playerNumber).append('- Done&nbsp;');
-        };
+        });
+        if (window.gameConnectionReady) {
+            window.gameConnectionReady.then(function () {
+                window.gameConnection.invoke("SetGroup", @Model.Id).catch(function (err) {
+                    console.error("SetGroup failed:", err);
+                });
+            });
+        }
     });
 </script>
 

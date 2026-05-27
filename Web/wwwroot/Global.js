@@ -1,6 +1,5 @@
 /// <reference path="Scripts/jquery-1.7.2.js" />
-/// <reference path="Scripts/jquery.signalR-0.5.1.js" />
-/// <reference path="/signalr/hubs" />
+/// Uses @microsoft/signalr loaded from CDN in _Layout.cshtml.
 
 // source: http://sam-benne.co.uk/code/jquery-html5-notification/
 ;(function ($) {
@@ -590,36 +589,35 @@ function AppendChatMessage(sourceId, sourceName, message) {
 
 $(function () {
     var isFocused;
-    $(window).blur(function () {
-        isFocused = false;
-    });
-    $(window).focus(function () {
-        isFocused = true;
-    });
+    $(window).blur(function () { isFocused = false; });
+    $(window).focus(function () { isFocused = true; });
 
-    var gameHub = $.connection.gameHub;
+    if (typeof signalR === 'undefined') return;
 
-    gameHub.sendNotification = function (title, message, targetUri) {
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/signalr")
+        .withAutomaticReconnect()
+        .build();
+
+    window.gameConnection = connection;
+
+    connection.on("sendNotification", function (title, message, targetUri) {
         if (window.location.pathname != targetUri || !isFocused) {
             PlayNotifySound();
-
-            $.desknoty({
-                icon: "/images/icon.png",
-                title: title,
-                body: message
-            });
-
+            $.desknoty({ icon: "/images/icon.png", title: title, body: message });
             noty({ "text": title + "<br /> " + message, "layout": "bottomRight", "closeButton": true });
         }
-    };
+    });
 
-    gameHub.reload = function () {
+    connection.on("reload", function () {
         location.reload();
-    };
+    });
 
-    gameHub.recieveMessage = function (sourceId, sourceName, message) {
+    connection.on("receiveMessage", function (sourceId, sourceName, message) {
         AppendChatMessage(sourceId, sourceName, message);
-    };
+    });
 
-    $.connection.hub.start();
+    window.gameConnectionReady = connection.start().catch(function (err) {
+        console.error("SignalR connect failed:", err);
+    });
 });

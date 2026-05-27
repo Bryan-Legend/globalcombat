@@ -378,7 +378,7 @@ Visit http://{1}/Game-{2}/ to view the details and join the game.
             if (IsPlaying)
                 game.Done(player);
 
-            return null;
+            return new EmptyResult();
         }
 
         public ActionResult ForceTurn(int id)
@@ -388,7 +388,7 @@ Visit http://{1}/Game-{2}/ to view the details and join the game.
             if (IsPlaying)// && !player.IsEliminated)
                 game.ForceTurn(player);
 
-            return null;
+            return new EmptyResult();
         }
 
         public int Assign(int id, int areaId = 0, int amount = 0)

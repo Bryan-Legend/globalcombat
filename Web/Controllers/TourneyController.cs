@@ -129,7 +129,7 @@ namespace WebGame.Controllers
         public ActionResult Join(int id)
         {
             if (!LoggedIn)
-                return null;
+                return Redirect("/");
 
             using (var db = new DBConnection())
             {
@@ -161,7 +161,7 @@ namespace WebGame.Controllers
         public ActionResult Quit(int id)
         {
             if (!LoggedIn)
-                return null;
+                return Redirect("/");
 
             using (var db = new DBConnection())
             {

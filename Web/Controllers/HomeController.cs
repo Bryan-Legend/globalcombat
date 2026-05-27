@@ -143,7 +143,7 @@ namespace WebGame
         public ActionResult LoadChatMessages(int targetId, string targetName)
         {
             if (!LoggedIn)
-                return null;
+                return new EmptyResult();
 
             using (var db = new DBConnection())
             {

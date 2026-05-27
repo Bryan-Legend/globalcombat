@@ -86,6 +86,11 @@ app.MapControllerRoute(
     defaults: new { controller = "Home", action = "GameManual" });
 
 app.MapControllerRoute(
+    name: "send-message",
+    pattern: "Send-Message",
+    defaults: new { controller = "Home", action = "SendMessage" });
+
+app.MapControllerRoute(
     name: "home-shortcuts",
     pattern: "{action}",
     defaults: new { controller = "Home" },

@@ -12,7 +12,7 @@ namespace WebGame
                 await Groups.AddToGroupAsync(Context.ConnectionId, sessionId);
 
             var referer = Context.GetHttpContext()?.Request.Headers["Referer"].ToString();
-            if (System.Uri.TryCreate(referer, System.UriKind.RelativeOrAbsolute, out var referrer))
+            if (System.Uri.TryCreate(referer, System.UriKind.Absolute, out var referrer))
             {
                 if (referrer.Segments.Length > 1 && referrer.Segments[1].StartsWith("Game-"))
                     await Groups.AddToGroupAsync(Context.ConnectionId, referrer.Segments[1].TrimEnd('/'));

@@ -485,4 +485,5 @@ $RECYCLE.BIN/
 
 # Local secrets (DB credentials, etc.)
 Secrets.config
+Secrets.json
 

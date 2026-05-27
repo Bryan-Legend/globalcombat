@@ -1,84 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SignalR.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using SignalR;
 
 namespace WebGame
 {
-    public class GameHub : Hub, IConnected, IDisconnect
+    public class GameHub : Hub
     {
-        public Task Connect()
+        public override async Task OnConnectedAsync()
         {
-            var sessionCookie = Context.RequestCookies["ASP.Net_SessionId"];
-            if (sessionCookie != null)
-                Groups.Add(Context.ConnectionId, sessionCookie.Value);
+            var sessionId = Context.GetHttpContext()?.Session?.Id;
+            if (!string.IsNullOrEmpty(sessionId))
+                await Groups.AddToGroupAsync(Context.ConnectionId, sessionId);
 
-            Uri referrer;
-            if (Uri.TryCreate(Context.Headers["Referer"], UriKind.RelativeOrAbsolute, out referrer))
+            var referer = Context.GetHttpContext()?.Request.Headers["Referer"].ToString();
+            if (System.Uri.TryCreate(referer, System.UriKind.RelativeOrAbsolute, out var referrer))
             {
                 if (referrer.Segments.Length > 1 && referrer.Segments[1].StartsWith("Game-"))
-                    Groups.Add(Context.ConnectionId, referrer.Segments[1].TrimEnd('/'));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, referrer.Segments[1].TrimEnd('/'));
 
                 if (referrer.Segments.Length > 1 && referrer.Segments[1].StartsWith("ProtoGame-"))
-                    Groups.Add(Context.ConnectionId, referrer.Segments[1].TrimEnd('/'));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, referrer.Segments[1].TrimEnd('/'));
             }
 
-            return null;
-        }
-
-        public Task Reconnect(IEnumerable<string> groups)
-        {
-            return null;
-        }
-
-        public Task Disconnect()
-        {
-            return null;
+            await base.OnConnectedAsync();
         }
 
         public Task SetGroup(int gameId)
         {
-            Caller.GameId = gameId;
-            Caller.GroupName = "Game-" + gameId;
-            return Groups.Add(Context.ConnectionId, Caller.GroupName);
+            return Groups.AddToGroupAsync(Context.ConnectionId, "Game-" + gameId);
         }
 
-        public void TestThrow()
-        {
-            throw new NotImplementedException();
-        }
+        public static void Say(string group, string message) =>
+            RuntimeContext.HubContext?.Clients.Group(group).SendAsync("addMessage", message);
 
-        public static void Say(string group, string message)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            context.Clients[group].addMessage(message);
-        }
+        public static void Refresh(string group) =>
+            RuntimeContext.HubContext?.Clients.Group(group).SendAsync("reload");
 
-        public static void Refresh(string group)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            context.Clients[group].reload();
-        }
+        public static void SetDone(string group, int playerNumber) =>
+            RuntimeContext.HubContext?.Clients.Group(group).SendAsync("setDone", playerNumber);
 
-        public static void SetDone(string group, int playerNumber)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            context.Clients[group].setDone(playerNumber);
-        }
+        public static void SendMessage(string sessionKey, int sourceId, string sourceName, string text) =>
+            RuntimeContext.HubContext?.Clients.Group(sessionKey).SendAsync("receiveMessage", sourceId, sourceName, text);
 
-        public static void SendMessage(string sessionKey, int sourceId, string sourceName, string text)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            context.Clients[sessionKey].recieveMessage(sourceId, sourceName, text);
-        }
-
-        public static void SendNotification(string sessionKey, string title, string text, string targetUri = "")
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            context.Clients[sessionKey].sendNotification(title, text, targetUri);
-        }
+        public static void SendNotification(string sessionKey, string title, string text, string targetUri = "") =>
+            RuntimeContext.HubContext?.Clients.Group(sessionKey).SendAsync("sendNotification", title, text, targetUri);
     }
 }

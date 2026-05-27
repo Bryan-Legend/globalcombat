@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 using ProtoBuf;
 using System.IO;
 using GlobalCombat.Core;
-using System.Web.Caching;
+using Microsoft.Extensions.Caching.Memory;
 using LT;
 using System.Net.Mail;
-using System.Configuration;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 namespace WebGame
@@ -23,19 +22,19 @@ namespace WebGame
             get
             {
                 if (smtpClient == null)
-                    smtpClient = new SmtpClient(ConfigurationManager.AppSettings["MailServer"]);
+                    smtpClient = new SmtpClient(AppConfig.Get("MailServer"));
                 return smtpClient;
             }
         }
 
         public static string FromAddress
         {
-            get { return ConfigurationManager.AppSettings["FromAddress"]; }
+            get { return AppConfig.Get("FromAddress"); }
         }
 
         public static string ContactEmail
         {
-            get { return ConfigurationManager.AppSettings["ContactEmail"]; }
+            get { return AppConfig.Get("ContactEmail"); }
         }
 
         public static List<Account> OnlineAccounts = new List<Account>();
@@ -99,7 +98,7 @@ namespace WebGame
                     (
                         game,
                         game.GameName + " Turn " + game.Turn,
-                        String.Format("The turn ran for Global Combat game ({0}).\n\n{1}\n\nVisit http://{2}/Game-{3}/ to play your turn.", game.GameName, BasePage.StripHtml(message), HttpContext.Current.Request.Url.Host, game.Id)
+                        String.Format("The turn ran for Global Combat game ({0}).\n\n{1}\n\nVisit http://{2}/Game-{3}/ to play your turn.", game.GameName, BasePage.StripHtml(message), (RuntimeContext.HttpContext?.Request.Host.Host ?? AppConfig.Get("ServerAddress")), game.Id)
                     );
 
                     GameHub.Refresh("Game-" + game.Id);
@@ -151,7 +150,7 @@ namespace WebGame
                         {
                             results.AppendFormat("\n{4} {0} (Score Expected = {1}, Score = {2}, Rating Change = {3})</td>", player.GetPlace(), player.ScoreExpected, player.Score, player.RatingChange, player.Name);
                         }
-                        EmailAllPlayers(game, game.GameName + " Ended", String.Format("The Global Combat game ({0}) has ended.\n\n{1}\n\nVisit http://{2}/Game-{3}/ to view the results.", game.GameName, BasePage.StripHtml(results.ToString()), HttpContext.Current.Request.Url.Host, game.Id));
+                        EmailAllPlayers(game, game.GameName + " Ended", String.Format("The Global Combat game ({0}) has ended.\n\n{1}\n\nVisit http://{2}/Game-{3}/ to view the results.", game.GameName, BasePage.StripHtml(results.ToString()), (RuntimeContext.HttpContext?.Request.Host.Host ?? AppConfig.Get("ServerAddress")), game.Id));
                     }
                 }
                 else
@@ -267,7 +266,7 @@ namespace WebGame
 
         public static Game GetGame(int id)
         {
-            var result = HttpContext.Current.Cache[id.ToString()] as Game;
+            var result = RuntimeContext.MemoryCache?.Get<Game>(id.ToString());
 
             if (result == null)
             {
@@ -294,7 +293,7 @@ namespace WebGame
                             }
                         }
 
-                        HttpContext.Current.Cache[result.Id.ToString()] = result;
+                        RuntimeContext.MemoryCache?.Set(result.Id.ToString(), result);
                     }
                 }
             }
@@ -321,7 +320,7 @@ namespace WebGame
             SaveGame(game);
 
             // insert into cache
-            HttpContext.Current.Cache[game.Id.ToString()] = game;
+            RuntimeContext.MemoryCache?.Set(game.Id.ToString(), game);
         }
 
         public static void SaveGame(Game game)

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Web.Mvc;
-using System.Web.Security;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
+
 using System.Collections;
 using GlobalCombat.Core;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace WebGame
 {

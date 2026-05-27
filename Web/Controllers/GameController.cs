@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using GlobalCombat.Core;
 using LT;
@@ -22,11 +22,7 @@ namespace WebGame
             game = GameServer.GetGame(id);
 
             if (game == null)
-            {
-                Response.RedirectPermanent("/", true);
-                Response.End();
                 return;
-            }
 
             if (LoggedIn)
             {
@@ -60,16 +56,12 @@ namespace WebGame
         public ActionResult Index(int id = -1)
         {
             if (id == -1)
-                return HttpNotFound();
-
-            if (!Request.Url.PathAndQuery.EndsWith("/"))
-            {
-                if (Request.IsLocal)
-                    throw new Exception("Invalid game link detected.  All links to games must end with a forward slash.");
-                return RedirectPermanent("Game-" + id + "/");
-            }
+                return NotFound();
 
             Initalize(id);
+
+            if (game == null)
+                return Redirect("/");
 
             if (game.ForceEndCheck())
             {
@@ -251,13 +243,13 @@ namespace WebGame
 @"You've been challenged to a game of Global Combat by {0}.
 
 Visit http://{1}/Game-{2}/ to view the details and join the game.
-", Account.Name, Request.Url.Host, game.Id));
+", Account.Name, Request.Host.Host, game.Id));
 
                                     //                                GameServer.SendEmail(account.EmailAddress, account.Name, "You've been challenged to a game.", String.Format(
                                     //@"You've been challenged to a game of Global Combat by {0}.
                                     //
                                     //Visit http://{1}/Game-{2}/ to view the details and join the game.
-                                    //", Account.Name, Request.Url.Host, game.Id));
+                                    //", Account.Name, Request.Host.Host, game.Id));
                                 }
                             }
                         }
@@ -365,7 +357,7 @@ Visit http://{1}/Game-{2}/ to view the details and join the game.
             return View("Index", game);
         }
 
-        [ValidateInput(false)]
+        
         public string Send(int id, string message)
         {
             if (String.IsNullOrWhiteSpace(message))
@@ -373,7 +365,7 @@ Visit http://{1}/Game-{2}/ to view the details and join the game.
 
             Initalize(id);
 
-            message = HttpUtility.HtmlEncode(message);
+            message = System.Net.WebUtility.HtmlEncode(message);
             game.SendForumMessage(message, Account.Id, Account.Name);
 
             return null;

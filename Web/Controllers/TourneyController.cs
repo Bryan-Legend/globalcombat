@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using LT;
 
 namespace WebGame.Controllers
@@ -41,7 +41,7 @@ namespace WebGame.Controllers
             {
                 var tourney = LoadTourney(db, id);
                 if (tourney == null)
-                    return HttpNotFound();
+                    return NotFound();
 
                 if (LoggedIn && Account.IsAdmin)
                 {

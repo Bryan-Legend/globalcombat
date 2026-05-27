@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 using ProtoBuf;
 using System.Collections;
 using GlobalCombat.Core;
@@ -45,10 +45,10 @@ namespace WebGame
                 if (SourceId == accountId)
                 {
                     result.Append("To ");
-                    result.Append(BaseView<Game>.AccountLink(DestinationId, DestinationName));
+                    result.Append(ViewHelpers.AccountLink(DestinationId, DestinationName));
                 }
                 else
-                    result.Append(BaseView<Game>.AccountLink(SourceId, SourceName));
+                    result.Append(ViewHelpers.AccountLink(SourceId, SourceName));
             }
             result.Append("</td>");
             result.Append("<td>");

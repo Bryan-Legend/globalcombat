@@ -72,10 +72,10 @@
 <tr>
     <td class="Label">Set Email Notifications</td>
     <td><select name="ForwardEmails" >
-        <option value="All" @(Account.ForwardEmails == "All" ? "selected" : "")>All</option>
-        <option value="GameStarts"@(Account.ForwardEmails == "GameStarts" ? "selected" : "")>Game Starts</option>
-        <option value="AllGame"@(Account.ForwardEmails == "AllGame" ? "selected" : "")>Game Starts and Turns</option>
-        <option value="None"@(Account.ForwardEmails == "None" ? "selected" : "")>None</option></select></td>
+        <option value="All" selected="@(Account.ForwardEmails == "All")">All</option>
+        <option value="GameStarts" selected="@(Account.ForwardEmails == "GameStarts")">Game Starts</option>
+        <option value="AllGame" selected="@(Account.ForwardEmails == "AllGame")">Game Starts and Turns</option>
+        <option value="None" selected="@(Account.ForwardEmails == "None")">None</option></select></td>
 </tr>
 <tr>
     <td></td>

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using LT;
 using System.Collections;
 using GlobalCombat.Core;
@@ -74,7 +75,7 @@ namespace WebGame
         public ActionResult PlayerInfo(int id)
         {
             if (id <= 0)
-                return HttpNotFound();
+                return NotFound();
 
             var model = new PlayerInfoModel();
 
@@ -83,7 +84,7 @@ namespace WebGame
                 model.Account = Account.Load(db.EvaluateRow("select * from account where id = {0}", id));
 
                 if (model.Account == null)
-                    return HttpNotFound();
+                    return NotFound();
 
                 if (LoggedIn && Account.Id == id) // use freshest account record
                     Account = model.Account;
@@ -106,7 +107,7 @@ namespace WebGame
             return View("PlayerInfo", model);
         }
 
-        [ValidateInput(false)]
+        
         public ActionResult SendMessage(int accountId = -1, string message = null)
         {
             if (!LoggedIn || accountId == -1)
@@ -114,14 +115,14 @@ namespace WebGame
 
             using (var db = new DBConnection())
             {
-                message = HttpUtility.HtmlEncode(message);
+                message = System.Net.WebUtility.HtmlEncode(message);
                 ViewBag.ErrorMessage = GameServer.SendMessage(db, accountId, Account.Id, Account.Name, message);
             }
 
             return PlayerInfo(accountId);
         }
 
-        [ValidateInput(false)]
+        
         public string Chat(int targetId, string message)
         {
             if (!LoggedIn)
@@ -132,7 +133,7 @@ namespace WebGame
 
             using (var db = new DBConnection())
             {
-                message = HttpUtility.HtmlEncode(message);
+                message = System.Net.WebUtility.HtmlEncode(message);
                 ViewBag.ErrorMessage = GameServer.SendMessage(db, targetId, Account.Id, Account.Name, message);
             }
 

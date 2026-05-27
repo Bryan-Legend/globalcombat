@@ -1,120 +1,114 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Collections;
+using System.Text.Json;
 using LT;
 using GlobalCombat.Core;
-using System.Text;
-using System.Security.Cryptography;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WebGame
 {
     public class BaseController : Controller
     {
-        #region CGI Helper Methods
+        const string SessionAccountIdKey = "AccountId";
+        const string SessionChatWindowsKey = "OpenChatWindows";
 
-        public bool IsSet(string fieldName)
+        public static string GetField(HttpRequest request, string fieldName)
         {
-            return IsSet(fieldName, Request);
+            if (request == null) return null;
+            if (request.HasFormContentType)
+            {
+                var form = request.Form[fieldName].ToString();
+                if (!string.IsNullOrEmpty(form)) return form;
+            }
+            var query = request.Query[fieldName].ToString();
+            return string.IsNullOrEmpty(query) ? null : query;
         }
 
-        public static bool IsSet(string fieldName, HttpRequestBase request)
+        public bool IsSet(string fieldName) => IsSet(fieldName, Request);
+        public static bool IsSet(string fieldName, HttpRequest request) => GetField(request, fieldName) != null;
+
+        public int GetInt(string fieldName) => GetInt(fieldName, Request);
+        public static int GetInt(string fieldName, HttpRequest request)
         {
-            return request[fieldName] != null;
+            var v = GetField(request, fieldName);
+            return int.TryParse(v, out var r) ? r : 0;
         }
 
-        public int GetInt(string fieldName)
+        public long GetLong(string fieldName) => GetLong(fieldName, Request);
+        public static long GetLong(string fieldName, HttpRequest request)
         {
-            return GetInt(fieldName, Request);
+            var v = GetField(request, fieldName);
+            return long.TryParse(v, out var r) ? r : 0;
         }
 
-        public static int GetInt(string fieldName, HttpRequestBase request)
-        {
-            if (!IsSet(fieldName, request))
-                return 0;
+        public string GetString(string fieldName) => GetString(fieldName, Request);
+        public static string GetString(string fieldName, HttpRequest request)
+            => GetField(request, fieldName) ?? string.Empty;
 
-            int result;
-            if (!Int32.TryParse(request[fieldName], out result))
-                return 0;
-            return result;
-        }
+        public override void OnActionExecuting(ActionExecutingContext context) { base.OnActionExecuting(context); }
 
-        public long GetLong(string fieldName)
-        {
-            return GetLong(fieldName, Request);
-        }
+        public bool LoggedIn => Account != null;
 
-        public static long GetLong(string fieldName, HttpRequestBase request)
-        {
-            if (!IsSet(fieldName, request))
-                return 0;
-
-            long result;
-            if (!Int64.TryParse(request[fieldName], out result))
-                return 0;
-            return result;
-        }
-
-        public string GetString(string fieldName)
-        {
-            return GetString(fieldName, Request);
-        }
-
-        public static string GetString(string fieldName, HttpRequestBase request)
-        {
-            if (!IsSet(fieldName, request))
-                return String.Empty;
-
-            return request[fieldName];
-        }
-
-        #endregion
-
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            LT.BasePage.HandleException(filterContext.Exception, System.Web.HttpContext.Current);
-            base.OnException(filterContext);
-        }
-
-        public bool LoggedIn
-        {
-            get { return Account != null; }
-        }
-
-        Account account;
+        Account _account;
         public Account Account
         {
             get
             {
-                if (account == null)
-                    account = Session["Account"] as Account;
-                return account;
-            }
-            set { Session["Account"] = value; }
-        }
-
-        public static List<string> OpenChatWindows
-        {
-            get
-            {
-                var result = System.Web.HttpContext.Current.Session["OpenChatWindows"] as List<string>;
-                if (result == null)
+                if (_account != null) return _account;
+                var id = HttpContext.Session.GetInt32(SessionAccountIdKey);
+                if (id.HasValue && id.Value > 0)
                 {
-                    result = new List<string>();
-                    System.Web.HttpContext.Current.Session["OpenChatWindows"] = result;
+                    using (var db = new DBConnection())
+                        _account = Account.Load(db.EvaluateRow("select * from account where id = {0}", id.Value));
                 }
-
-                return result;
+                return _account;
+            }
+            set
+            {
+                _account = value;
+                if (value == null)
+                    HttpContext.Session.Remove(SessionAccountIdKey);
+                else
+                    HttpContext.Session.SetInt32(SessionAccountIdKey, value.Id);
             }
         }
 
-        internal static void AddChatWindow(int targetId, string targetName)
+        public static List<string> GetOpenChatWindows(HttpContext httpContext)
         {
-            var windowId = String.Format("{0}|{1}", targetId, targetName);
-            if (!OpenChatWindows.Contains(windowId))
-                OpenChatWindows.Add(windowId);
+            var bytes = httpContext.Session.Get(SessionChatWindowsKey);
+            if (bytes == null) return new List<string>();
+            return JsonSerializer.Deserialize<List<string>>(bytes) ?? new List<string>();
+        }
+
+        public static void SetOpenChatWindows(HttpContext httpContext, List<string> windows)
+        {
+            httpContext.Session.Set(SessionChatWindowsKey, JsonSerializer.SerializeToUtf8Bytes(windows));
+        }
+
+        public List<string> OpenChatWindows => GetOpenChatWindows(HttpContext);
+
+        public static void AddChatWindow(HttpContext httpContext, int targetId, string targetName)
+        {
+            var windowId = $"{targetId}|{targetName}";
+            var windows = GetOpenChatWindows(httpContext);
+            if (!windows.Contains(windowId))
+            {
+                windows.Add(windowId);
+                SetOpenChatWindows(httpContext, windows);
+            }
+        }
+
+        internal void AddChatWindow(int targetId, string targetName)
+        {
+            var windowId = $"{targetId}|{targetName}";
+            var windows = OpenChatWindows;
+            if (!windows.Contains(windowId))
+            {
+                windows.Add(windowId);
+                SetOpenChatWindows(HttpContext, windows);
+            }
         }
 
         protected Account FindAccount(string emailOrAccountName)
@@ -122,10 +116,7 @@ namespace WebGame
             using (var db = new DBConnection())
             {
                 var row = db.EvaluateRow("select * from account where name = '{0}' or email = '{0}'", DBConnection.AddSlashes(emailOrAccountName));
-
-                if (row == null)
-                    return null;
-
+                if (row == null) return null;
                 return Account.Load(row);
             }
         }
@@ -142,9 +133,9 @@ namespace WebGame
 
             var result = CreateAccount(accountName, password, password, emailAddress, out accountId, true);
 
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
-                GameServer.SendEmail(emailAddress, accountName, "You've been challenged to a game.", String.Format(
+                GameServer.SendEmail(emailAddress, accountName, "You've been challenged to a game.", string.Format(
 @"You've been challenged to a game of Global Combat by {0}.
 
 Visit http://{1}/Game-{2}/ to view the details and join the game.
@@ -153,7 +144,7 @@ Account Email: {3}
 Password: {4}
 
 You can set your account name and password at http://{1}/Account/Settings
-", Account.Name, Request.Url.Host, gameId, account.EmailAddress, password));
+", Account.Name, Request.Host, gameId, emailAddress, password));
             }
 
             return result;
@@ -168,7 +159,7 @@ You can set your account name and password at http://{1}/Account/Settings
             if (!LT.BasePage.IsValidEmailAddress(email))
                 return "You need to enter a valid email address.";
 
-            if (loginName != System.Web.HttpUtility.HtmlEncode(loginName) || loginName != DBConnection.AddSlashes(loginName))
+            if (loginName != System.Net.WebUtility.HtmlEncode(loginName) || loginName != DBConnection.AddSlashes(loginName))
                 return "Invalid login name.";
 
             using (var db = new DBConnection())
@@ -198,10 +189,10 @@ You can set your account name and password at http://{1}/Account/Settings
                 accountId = Convert.ToInt32(db.LastInsertID);
 
                 if (isTempLoginName)
-                    db.Execute("update account set name = concat(name, '-', id) where id = {0}", accountId); // append -ID
+                    db.Execute("update account set name = concat(name, '-', id) where id = {0}", accountId);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

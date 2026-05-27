@@ -1,56 +1,14 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Text;
+using LT;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace WebGame
 {
-    public abstract class BaseView<TModel> : WebViewPage<TModel>
+    public static class ViewHelpers
     {
-        public bool LoggedIn
-        {
-            get { return Account != null; }
-        }
-
-        Account account;
-        public Account Account
-        {
-            get
-            {
-                if (account == null)
-                    account = Session["Account"] as Account;
-                return account;
-            }
-            set { Session["Account"] = value; }
-        }
-
-        public List<string> OpenChatWindows
-        {
-            get { return BaseController.OpenChatWindows; }
-        }
-
-        public bool IsSet(string fieldName)
-        {
-            return BaseController.IsSet(fieldName, Request);
-        }
-
-        public int GetInt(string fieldName)
-        {
-            return BaseController.GetInt(fieldName, Request);
-        }
-
-        public long GetLong(string fieldName)
-        {
-            return BaseController.GetLong(fieldName, Request);
-        }
-
-        public string GetString(string fieldName)
-        {
-            return BaseController.GetString(fieldName, Request);
-        }
-
         public static HtmlString AccountLink(int accountId, string accountName, string color = null)
         {
             var result = new StringBuilder();
@@ -59,10 +17,8 @@ namespace WebGame
             else
                 result.AppendFormat("<a href=\"/Player-Info-{0}\">{1}</a>", accountId, accountName);
 
-            var playerAccountId = -1;
-            var playerAccount = HttpContext.Current.Session["Account"] as Account;
-            if (playerAccount != null)
-                playerAccountId = playerAccount.Id;
+            var session = RuntimeContext.HttpContext?.Session;
+            var playerAccountId = session?.GetInt32("AccountId") ?? -1;
 
             if (accountId == playerAccountId)
             {
@@ -81,48 +37,69 @@ namespace WebGame
         }
     }
 
-    public abstract class BaseViews : WebViewPage
+    public abstract class BaseView<TModel> : RazorPage<TModel>
     {
-        public bool LoggedIn
-        {
-            get { return Account != null; }
-        }
+        public HttpRequest Request => Context.Request;
 
-        Account account;
+        public HtmlString AccountLink(int accountId, string accountName, string color = null) =>
+            ViewHelpers.AccountLink(accountId, accountName, color);
+
+        public bool LoggedIn => Account != null;
+
+        Account _account;
         public Account Account
         {
             get
             {
-                if (account == null)
-                    account = Session["Account"] as Account;
-                return account;
+                if (_account != null) return _account;
+                var id = Context.Session.GetInt32("AccountId");
+                if (id.HasValue && id.Value > 0)
+                {
+                    using (var db = new DBConnection())
+                        _account = Account.Load(db.EvaluateRow("select * from account where id = {0}", id.Value));
+                }
+                return _account;
             }
-            set { Session["Account"] = value; }
         }
 
-        public List<string> OpenChatWindows
+        public List<string> OpenChatWindows => BaseController.GetOpenChatWindows(Context);
+
+        public bool IsSet(string fieldName) => BaseController.IsSet(fieldName, Context.Request);
+        public int GetInt(string fieldName) => BaseController.GetInt(fieldName, Context.Request);
+        public long GetLong(string fieldName) => BaseController.GetLong(fieldName, Context.Request);
+        public string GetString(string fieldName) => BaseController.GetString(fieldName, Context.Request);
+    }
+
+    public abstract class BaseViews : RazorPage
+    {
+        public HttpRequest Request => Context.Request;
+
+        public HtmlString AccountLink(int accountId, string accountName, string color = null) =>
+            ViewHelpers.AccountLink(accountId, accountName, color);
+
+        public bool LoggedIn => Account != null;
+
+        Account _account;
+        public Account Account
         {
-            get { return BaseController.OpenChatWindows; }
+            get
+            {
+                if (_account != null) return _account;
+                var id = Context.Session.GetInt32("AccountId");
+                if (id.HasValue && id.Value > 0)
+                {
+                    using (var db = new DBConnection())
+                        _account = Account.Load(db.EvaluateRow("select * from account where id = {0}", id.Value));
+                }
+                return _account;
+            }
         }
 
-        public bool IsSet(string fieldName)
-        {
-            return BaseController.IsSet(fieldName, Request);
-        }
+        public List<string> OpenChatWindows => BaseController.GetOpenChatWindows(Context);
 
-        public int GetInt(string fieldName)
-        {
-            return BaseController.GetInt(fieldName, Request);
-        }
-
-        public long GetLong(string fieldName)
-        {
-            return BaseController.GetLong(fieldName, Request);
-        }
-
-        public string GetString(string fieldName)
-        {
-            return BaseController.GetString(fieldName, Request);
-        }
+        public bool IsSet(string fieldName) => BaseController.IsSet(fieldName, Context.Request);
+        public int GetInt(string fieldName) => BaseController.GetInt(fieldName, Context.Request);
+        public long GetLong(string fieldName) => BaseController.GetLong(fieldName, Context.Request);
+        public string GetString(string fieldName) => BaseController.GetString(fieldName, Context.Request);
     }
 }

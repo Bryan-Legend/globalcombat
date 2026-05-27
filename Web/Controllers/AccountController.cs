@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+
 using System.Security.Cryptography;
 using System.Text;
 using LT;
@@ -31,12 +31,12 @@ namespace WebGame
                 ViewBag.ResultString = ModifyPassword(GetString("OldPassword"), GetString("NewPassword"), GetString("NewPasswordVerify"));
 
             if (IsSet("ForwardEmails"))
-                ViewBag.ResultString = ModifyForwardEmails(Request["ForwardEmails"]);
+                ViewBag.ResultString = ModifyForwardEmails(GetString("ForwardEmails"));
 
             return View();
         }
 
-        [ValidateInput(false)]
+        
         string ModifyLoginName(string newLoginName)
         {
             if (!Account.Name.EndsWith('-' + Account.Id.ToString()))
@@ -46,7 +46,7 @@ namespace WebGame
             {
                 newLoginName = newLoginName.Trim(new char[] { ' ', '\t', '\n', '\r', '0' });
 
-                if (newLoginName != System.Web.HttpUtility.HtmlEncode(newLoginName) || newLoginName != DBConnection.AddSlashes(newLoginName))
+                if (newLoginName != System.Net.WebUtility.HtmlEncode(newLoginName) || newLoginName != DBConnection.AddSlashes(newLoginName))
                     return "Invalid login name.";
 
                 if (db.Evaluate("select name from account where name = '" + DBConnection.AddSlashes(newLoginName) + "'") != null)
@@ -59,7 +59,7 @@ namespace WebGame
 //@"You've changed your login to {0}
 //
 //You can change your account name and password at http://{1}/Account/Settings
-//", Account.Name,Request.Url.Host));
+//", Account.Name,Request.Host.Host));
             }
             return "Login name modified successfully.  It will not be updated in your current games.";
         }
@@ -140,7 +140,7 @@ namespace WebGame
                 var newPassword = UserPage<int>.GeneratePassword(8);
                 db.Execute("update account set password = '{0}' where id = {1}", DBConnection.AddSlashes(newPassword), (int)accountRow["id"]);
 
-                GameServer.SendEmail((string)accountRow["email"], GameServer.FromAddress, "Global Combat Password Reset", "Login Name: " + (string)accountRow["name"] + "\nPassword: " + newPassword + "\n\nIf you have a hard time remembering it, try tattooing it to your leg for easy access. \n\nThis request was sent from https://globalcombat.com/IpAddresses?IPAddress=" + Request.UserHostAddress);
+                GameServer.SendEmail((string)accountRow["email"], GameServer.FromAddress, "Global Combat Password Reset", "Login Name: " + (string)accountRow["name"] + "\nPassword: " + newPassword + "\n\nIf you have a hard time remembering it, try tattooing it to your leg for easy access. \n\nThis request was sent from https://globalcombat.com/IpAddresses?IPAddress=" + HttpContext.Connection.RemoteIpAddress?.ToString());
 
                 return "A new password was sent to your email.";
             }
@@ -160,7 +160,6 @@ namespace WebGame
 
                 if (result == null)
                 {
-                    FormsAuthentication.SetAuthCookie(Account.EmailAddress, true);
 
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -209,10 +208,10 @@ namespace WebGame
             if (account == null)
                 throw new Exception("Unable to log into null account.");
 
-            account.SessionKey = System.Web.HttpContext.Current.Session.SessionID;
-            System.Web.HttpContext.Current.Session["Account"] = account;
+            account.SessionKey = WebGame.RuntimeContext.HttpContext.Session.Id;
+            WebGame.RuntimeContext.HttpContext.Session.SetInt32("AccountId", account.Id);
 
-            var agent = System.Web.HttpContext.Current.Request.UserAgent;
+            var agent = WebGame.RuntimeContext.HttpContext.Request.Headers.UserAgent.ToString();
             if (agent.Length > 250)
                 agent = agent.Substring(0, 250);
 
@@ -220,11 +219,11 @@ namespace WebGame
             {
                 db.Execute("update account set last_on = {0}, num_logins = num_logins + 1 where id = {1}", Utility.UnixTimestamp(DateTime.UtcNow), account.Id);
                 //if (!account.IsAdmin)
-                    db.Execute("insert ignore into account_login (account_id, datetime, ipaddress, browser, adminused) values ({0}, {1}, '{2}', '{3}', 'False')", account.Id, Utility.UnixTimestamp(DateTime.UtcNow), DBConnection.AddSlashes(System.Web.HttpContext.Current.Request.UserHostAddress), DBConnection.AddSlashes(agent));
+                    db.Execute("insert ignore into account_login (account_id, datetime, ipaddress, browser, adminused) values ({0}, {1}, '{2}', '{3}', 'False')", account.Id, Utility.UnixTimestamp(DateTime.UtcNow), DBConnection.AddSlashes(WebGame.RuntimeContext.HttpContext.Connection.RemoteIpAddress?.ToString()), DBConnection.AddSlashes(agent));
 
                 foreach (var message in db.EvaluateTable("select distinct(from_id), account.Name from message join account on account.Id = from_id where to_id = {0} and readflag = 'False'", account.Id))
                 {
-                    AddChatWindow((int)message["from_id"], (string)message["Name"]);
+                    BaseController.AddChatWindow(WebGame.RuntimeContext.HttpContext, (int)message["from_id"], (string)message["Name"]);
                 }
 
                 db.Execute("update message set readflag = 'True' where to_id = {0}", account.Id);
@@ -244,7 +243,7 @@ namespace WebGame
                     throw new Exception("Account record was null.  This should never happen.");
             }
             else
-                existingAccount.SessionKey = System.Web.HttpContext.Current.Session.SessionID;
+                existingAccount.SessionKey = WebGame.RuntimeContext.HttpContext.Session.Id;
         }
 
         public ActionResult LogOff()
@@ -261,8 +260,7 @@ namespace WebGame
                 }
             }
 
-            Session.Abandon();
-            FormsAuthentication.SignOut();
+            HttpContext.Session.Clear();
 
             return RedirectToAction("Index", "Home");
         }
@@ -290,7 +288,6 @@ namespace WebGame
                         var row = db.EvaluateRow("select * from account where id = {0}", accountId);
                         SetSession(row);
                     }
-                    FormsAuthentication.SetAuthCookie(model.Email, true);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -310,7 +307,7 @@ namespace WebGame
             return View();
         }
 
-        [ValidateInput(false)]
+        
         string ContactEmail(string subject, string comments)
         {
             if (String.IsNullOrWhiteSpace(subject))

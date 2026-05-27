@@ -35,8 +35,10 @@ CREATE TABLE  `globalcombat`.`account` (
 -- System account (id=1). Turn-result and other automated game messages
 -- record from_id=1; LoadMessages JOINs against the account table, so this
 -- row must exist or those messages get filtered out of the result set.
-INSERT INTO `globalcombat`.`account` (`id`, `name`, `email`, `status`)
-VALUES (1, 'System', 'noreply@globalcombat.com', 'Admin');
+-- disabled_by=1 blocks login (the disabled check in AccountController.Login
+-- fires before the password check, so the empty password can't be matched).
+INSERT INTO `globalcombat`.`account` (`id`, `name`, `email`, `status`, `disabled_by`)
+VALUES (1, 'System', 'noreply@globalcombat.com', 'Admin', 1);
 
 DROP TABLE IF EXISTS `globalcombat`.`account_login`;
 CREATE TABLE  `globalcombat`.`account_login` (

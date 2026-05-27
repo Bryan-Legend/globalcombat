@@ -71,6 +71,27 @@ app.MapControllerRoute(
     defaults: new { controller = "Tourney", action = "Index" });
 
 app.MapControllerRoute(
+    name: "create-game",
+    pattern: "Create-Game",
+    defaults: new { controller = "Game", action = "Create" });
+
+app.MapControllerRoute(
+    name: "create-tournament",
+    pattern: "Create-Tournament",
+    defaults: new { controller = "Tourney", action = "Create" });
+
+app.MapControllerRoute(
+    name: "game-manual",
+    pattern: "Game-Manual",
+    defaults: new { controller = "Home", action = "GameManual" });
+
+app.MapControllerRoute(
+    name: "home-shortcuts",
+    pattern: "{action}",
+    defaults: new { controller = "Home" },
+    constraints: new { action = "Messages|Stats|IpAddresses|GameManual|OptOut|PlayerInfo|Chat|LoadChatMessages|CloseChatWindow|SendMessage" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
